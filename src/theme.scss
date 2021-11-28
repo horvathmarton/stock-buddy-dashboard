@@ -1,0 +1,64 @@
+@import "~@angular/material/theming";
+
+@import "./app/core/views/app/app.view.theme";
+
+@import url("https://fonts.googleapis.com/css2?family=Comfortaa:wght@500&display=swap");
+
+// Light palette
+$light-primary: mat-palette($mat-cyan, 800);
+$light-accent: mat-palette($mat-green, A100);
+$light-warn: mat-palette($mat-red, 800);
+
+// Dark palette
+$dark-primary: mat-palette($mat-cyan, 800);
+$dark-accent: mat-palette($mat-green, A100);
+$dark-warn: mat-palette($mat-red, 800);
+
+$app-typography: mat-typography-config(
+  $font-family: "'Comfortaa', cursive",
+  $title: mat-typography-level(24px, 32px, bold),
+);
+
+// Typography
+@mixin app-typography($typography: $app-typography) {
+  @include mat-base-typography($typography);
+  @include mat-card-typography($typography);
+  @include mat-select-typography($typography);
+  @include mat-form-field-typography($typography);
+  @include mat-slide-toggle-typography($typography);
+  @include mat-toolbar-typography($typography);
+  @include mat-button-typography($typography);
+
+  // Custom component typography comes here!
+  @include app-root-typography($typography);
+}
+
+// Theme
+@mixin app-style-core() {
+  @include mat-ripple();
+  @include cdk-a11y();
+  @include cdk-overlay();
+  @include cdk-text-field();
+
+  @include app-typography();
+}
+
+@mixin app-theme($theme) {
+  @include all-component-themes($theme);
+
+  // Custom themes for components comes here!
+  @include app-root-theme($theme);
+}
+
+$mat-light-theme: mat-light-theme($light-primary, $light-accent, $light-warn);
+$mat-dark-theme: mat-dark-theme($dark-primary, $dark-accent, $dark-warn);
+
+@include app-style-core();
+
+.light-mode {
+  @include app-theme($mat-light-theme);
+}
+
+.dark-mode {
+  @include app-theme($mat-dark-theme);
+}

@@ -1,0 +1,36 @@
+<form [formGroup]="form" class="form">
+  <mat-form-field appearance="outline" class="form-field">
+    <!-- <mat-label>Username</mat-label> -->
+    <input
+      matInput
+      formControlName="username"
+      placeholder="Username"
+      type="text"
+    />
+  </mat-form-field>
+
+  <mat-form-field appearance="outline" class="form-field">
+    <!-- <mat-label>Password</mat-label> -->
+    <input
+      matInput
+      formControlName="password"
+      placeholder="Password"
+      type="password"
+    />
+  </mat-form-field>
+
+  <div class="action-buttons">
+    <button mat-raised-button color="accent" class="action-button">
+      Accent
+    </button>
+
+    <button
+      mat-raised-button
+      (click)="save()"
+      color="primary"
+      class="action-button"
+    >
+      Login
+    </button>
+  </div>
+</form>
