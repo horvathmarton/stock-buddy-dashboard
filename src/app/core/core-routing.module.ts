@@ -1,11 +1,23 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { AuthGuard } from './guards';
 import { NotFoundViewComponent } from './views';
 
 const routes: Routes = [
   {
+    path: '',
+    pathMatch: 'full',
+    redirectTo: '/stocks',
+  },
+  {
     path: 'auth',
     loadChildren: () => import('../auth/auth.module').then((m) => m.AuthModule),
+  },
+  {
+    path: 'stocks',
+    canActivate: [AuthGuard],
+    loadChildren: () =>
+      import('../stocks/stocks.module').then((m) => m.StocksModule),
   },
   {
     path: '**',

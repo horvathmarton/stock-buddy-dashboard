@@ -1,36 +1,39 @@
+<div class="mat-title">Stock Buddy</div>
 <form [formGroup]="form" class="form">
   <mat-form-field appearance="outline" class="form-field">
-    <!-- <mat-label>Username</mat-label> -->
     <input
       matInput
       formControlName="username"
       placeholder="Username"
       type="text"
     />
+    <mat-error *ngIf="form.get('username')?.invalid"
+      >{{getErrorMessage(form.get('username'))}}</mat-error
+    >
   </mat-form-field>
 
   <mat-form-field appearance="outline" class="form-field">
-    <!-- <mat-label>Password</mat-label> -->
     <input
       matInput
       formControlName="password"
       placeholder="Password"
       type="password"
     />
-  </mat-form-field>
-
-  <div class="action-buttons">
-    <button mat-raised-button color="accent" class="action-button">
-      Accent
-    </button>
-
-    <button
-      mat-raised-button
-      (click)="save()"
-      color="primary"
-      class="action-button"
+    <mat-error *ngIf="form.get('password')?.invalid"
+      >{{getErrorMessage(form.get('password'))}}</mat-error
     >
-      Login
-    </button>
-  </div>
+  </mat-form-field>
+  <!-- TODO: This jumps when displayed on the UI fix later. -->
+  <mat-error *ngIf="formError">{{ formError }}</mat-error>
+
+  <button
+    (click)="login()"
+    [disabled]="isLoading"
+    mat-raised-button
+    color="primary"
+    class="action-button"
+  >
+    <span *ngIf="!isLoading">Login</span>
+    <mat-spinner *ngIf="isLoading" diameter="30"></mat-spinner>
+  </button>
 </form>
