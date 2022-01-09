@@ -1,0 +1,37 @@
+<div class="mat-title">Portfolio summary</div>
+
+<mat-tab-group
+  *ngIf="!isLoading"
+  mat-align-tabs="start"
+  animationDuration="0ms"
+>
+  <mat-tab label="Base data">
+    <sb-basic-stock-data-table
+      [positions]="basicData"
+    ></sb-basic-stock-data-table>
+  </mat-tab>
+  <mat-tab label="Dividend"> Dividend </mat-tab>
+  <mat-tab label="Risk">
+    <div class="risk">
+      <sb-stock-risk-table
+        [riskData]="basicData"
+        class="half-screen"
+      ></sb-stock-risk-table>
+      <div class="half-screen">
+        <sb-treemap-chart
+          title="Size distribution"
+          [data]="sizeDistribution"
+        ></sb-treemap-chart>
+        <sb-treemap-chart
+          title="Size distibution @ cost"
+          [data]="sizeDistributionAtCost"
+        ></sb-treemap-chart>
+        <sb-pie-chart
+          title="Sector distribution"
+          [data]="sectorDistribution"
+        ></sb-pie-chart>
+      </div>
+    </div>
+  </mat-tab>
+  <mat-tab label="PnL">PnL</mat-tab>
+</mat-tab-group>

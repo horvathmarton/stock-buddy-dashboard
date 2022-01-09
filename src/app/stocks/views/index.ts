@@ -1,1 +1,1 @@
-export * from './portfolio-summary/portfolio-summary.view';
+export * from './portfolio/portfolio.view';

@@ -1,0 +1,74 @@
+<mat-table [dataSource]="dataSource" matSort class="table">
+  <ng-container matColumnDef="ticker">
+    <mat-header-cell *matHeaderCellDef mat-sort-header>Ticker</mat-header-cell>
+    <mat-cell *matCellDef="let row">
+      {{ row.ticker }}
+    </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="name">
+    <mat-header-cell *matHeaderCellDef mat-sort-header class="wide-cell"
+      >Name</mat-header-cell
+    >
+    <mat-cell *matCellDef="let row" class="wide-cell">
+      {{ row.name }}
+    </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="sector">
+    <mat-header-cell *matHeaderCellDef mat-sort-header class="wide-cell"
+      >Sector</mat-header-cell
+    >
+    <mat-cell *matCellDef="let row" class="wide-cell">
+      {{ row.sector }}
+    </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="price">
+    <mat-header-cell *matHeaderCellDef mat-sort-header>Price</mat-header-cell>
+    <mat-cell *matCellDef="let row">
+      {{ row.price | currency }}
+    </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="purchase_price">
+    <mat-header-cell *matHeaderCellDef mat-sort-header class="wide-cell"
+      >Avg. purchase price</mat-header-cell
+    >
+    <mat-cell *matCellDef="let row" class="wide-cell">
+      {{ row.purchase_price | currency }}
+    </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="shares">
+    <mat-header-cell *matHeaderCellDef mat-sort-header>Shares</mat-header-cell>
+    <mat-cell *matCellDef="let row">
+      {{ row.shares }}
+    </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="first_purchase_date">
+    <mat-header-cell *matHeaderCellDef mat-sort-header class="wide-cell"
+      >First purchase</mat-header-cell
+    >
+    <mat-cell *matCellDef="let row" class="wide-cell">
+      {{ row.first_purchase_date | date }}
+    </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="latest_purchase_date">
+    <mat-header-cell *matHeaderCellDef mat-sort-header class="wide-cell"
+      >Latest purchase</mat-header-cell
+    >
+    <mat-cell *matCellDef="let row" class="wide-cell">
+      {{ row.latest_purchase_date | date }}
+    </mat-cell>
+  </ng-container>
+
+  <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+  <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+
+  <mat-row class="mat-row" *matNoDataRow>
+    <mat-cell colspan="8">No data matching the filter.</mat-cell>
+  </mat-row>
+</mat-table>
