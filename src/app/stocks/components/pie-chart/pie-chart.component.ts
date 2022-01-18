@@ -11,8 +11,8 @@ export class PieChartComponent implements AfterViewInit {
     series: [],
     chart: {
       type: 'pie',
-      height: 500,
-      width: 800,
+      height: 400,
+      width: 400,
       toolbar: {
         show: false,
       },
@@ -23,7 +23,7 @@ export class PieChartComponent implements AfterViewInit {
   };
 
   @Input()
-  public data!: unknown[];
+  public data!: Record<string, number>;
 
   @ViewChild('chart')
   public chart!: ChartComponent;

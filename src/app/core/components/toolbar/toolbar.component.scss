@@ -1,0 +1,23 @@
+@import "../../../../variables";
+
+.branding {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+
+  .branding-icon {
+    margin: $margin-size / 2;
+  }
+
+  .toolbar-title {
+    margin-bottom: 0;
+  }
+}
+
+.dark-mode-toggle {
+  margin-right: $margin-size;
+}
+
+.large-icon {
+  transform: scale(1.5);
+}

@@ -7,14 +7,14 @@ const routes: Routes = [
   {
     path: '',
     pathMatch: 'full',
-    redirectTo: '/stocks',
+    redirectTo: '/portfolio',
   },
   {
     path: 'auth',
     loadChildren: () => import('../auth/auth.module').then((m) => m.AuthModule),
   },
   {
-    path: 'stocks',
+    path: 'portfolio',
     canActivate: [AuthGuard],
     loadChildren: () =>
       import('../stocks/stocks.module').then((m) => m.StocksModule),

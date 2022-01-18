@@ -2,8 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { EMPTY } from 'rxjs';
-import { catchError, finalize, tap } from 'rxjs/operators';
+import { catchError, filter, finalize, take, tap } from 'rxjs/operators';
 import { AuthService } from '../../services';
+import { AuthQuery } from '../../state';
 
 @Component({
   templateUrl: './login.view.html',
@@ -21,13 +22,18 @@ export class LoginViewComponent implements OnInit {
   constructor(
     private readonly fb: FormBuilder,
     private readonly auth: AuthService,
-    private readonly router: Router
+    private readonly router: Router,
+    private readonly query: AuthQuery
   ) {}
 
   public ngOnInit(): void {
-    if (this.auth.authenticated) {
-      this.router.navigate(['/']);
-    }
+    this.query.isAuthenticated
+      .pipe(
+        take(1),
+        filter((authenticated) => authenticated),
+        tap(() => this.router.navigate(['/']))
+      )
+      .subscribe();
   }
 
   public login() {

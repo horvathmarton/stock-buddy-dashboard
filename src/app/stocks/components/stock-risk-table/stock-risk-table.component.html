@@ -22,10 +22,12 @@
     </mat-cell>
   </ng-container>
 
-  <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+  <mat-header-row
+    *matHeaderRowDef="displayedColumns; sticky: true"
+  ></mat-header-row>
   <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
 
   <mat-row class="mat-row" *matNoDataRow>
-    <mat-cell colspan="8">No data matching the filter.</mat-cell>
+    <mat-cell colspan="3">No data matching the filter.</mat-cell>
   </mat-row>
 </mat-table>

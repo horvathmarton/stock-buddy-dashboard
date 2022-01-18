@@ -1,7 +1,67 @@
-.risk {
-  display: flex;
-}
+@import "../../../../variables";
 
-.half-screen {
-  width: 50%;
+.tab-group {
+  margin: 0 $margin-size;
+  height: 82.5%;
+
+  .tab {
+    display: grid;
+    height: 100%;
+    overflow: hidden;
+
+    .table {
+      grid-area: table;
+      overflow-y: scroll;
+    }
+  }
+
+  .dividend {
+    grid-template-areas:
+      "income dividend"
+      "table yield";
+
+    .dividend {
+      grid-area: dividend;
+    }
+
+    .size {
+      grid-area: size;
+    }
+
+    .income {
+      grid-area: income;
+    }
+  }
+
+  .risk {
+    grid-template-areas:
+      "sector size"
+      "table size-at-cost";
+
+    .sector {
+      grid-area: sector;
+    }
+
+    .size {
+      grid-area: size;
+    }
+
+    .size-at-cost {
+      grid-area: size-at-cost;
+    }
+  }
+
+  .pnl {
+    grid-template-areas:
+      "table return"
+      "table annualized";
+
+    .return {
+      grid-area: return;
+    }
+
+    .annualized {
+      grid-area: annualized;
+    }
+  }
 }

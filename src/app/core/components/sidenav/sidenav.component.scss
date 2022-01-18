@@ -1,0 +1,18 @@
+@import "../../../../variables";
+
+.sidenav-container {
+  height: 100%;
+
+  .nav-item {
+    display: flex;
+    align-items: center;
+
+    .icon {
+      margin: 0 $margin-size / 4;
+    }
+  }
+}
+
+.main-content-container {
+  overflow-y: hidden;
+}

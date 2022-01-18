@@ -8,6 +8,11 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatTableModule } from '@angular/material/table';
 import { MatSortModule } from '@angular/material/sort';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatIconModule } from '@angular/material/icon';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatListModule } from '@angular/material/list';
 
 const MODULES = [
   NgApexchartsModule,
@@ -19,6 +24,11 @@ const MODULES = [
   MatTabsModule,
   MatTableModule,
   MatSortModule,
+  MatToolbarModule,
+  MatIconModule,
+  MatMenuModule,
+  MatSidenavModule,
+  MatListModule,
 ];
 
 @NgModule({

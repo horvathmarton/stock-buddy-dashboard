@@ -1,0 +1,31 @@
+<mat-table [dataSource]="dataSource" matSort class="table">
+  <ng-container matColumnDef="ticker">
+    <mat-header-cell *matHeaderCellDef mat-sort-header>Ticker</mat-header-cell>
+    <mat-cell *matCellDef="let row">
+      {{ row.ticker }}
+    </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="pnl">
+    <mat-header-cell *matHeaderCellDef mat-sort-header>PnL</mat-header-cell>
+    <mat-cell *matCellDef="let row">
+      {{ row.pnl | currency }}
+    </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="pnl_percentage">
+    <mat-header-cell *matHeaderCellDef mat-sort-header>PnL (%)</mat-header-cell>
+    <mat-cell *matCellDef="let row">
+      {{ row.pnl_percentage | percent: "1.2-2" }}
+    </mat-cell>
+  </ng-container>
+
+  <mat-header-row
+    *matHeaderRowDef="displayedColumns; sticky: true"
+  ></mat-header-row>
+  <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+
+  <mat-row class="mat-row" *matNoDataRow>
+    <mat-cell colspan="3">No data matching the filter.</mat-cell>
+  </mat-row>
+</mat-table>

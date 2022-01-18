@@ -43,7 +43,7 @@ export class TreemapChartComponent implements AfterViewInit {
   };
 
   @Input()
-  public data!: unknown[];
+  public data!: Record<string, number>;
 
   @ViewChild('chart')
   public chart!: ChartComponent;

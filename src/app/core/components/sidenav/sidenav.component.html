@@ -1,0 +1,29 @@
+<mat-drawer-container class="sidenav-container">
+  <mat-drawer mode="side">
+    <mat-nav-list>
+      <mat-list-item routerLink="/dashboard" class="mat-subheading-2 nav-item">
+        <mat-icon class="icon">dashboard</mat-icon>
+        <span> Dashboard </span>
+      </mat-list-item>
+      <mat-list-item routerLink="/portfolio" class="mat-subheading-2 nav-item">
+        <mat-icon class="icon">bar_chart</mat-icon>
+        <span> Portfolio </span>
+      </mat-list-item>
+      <mat-list-item routerLink="/watchlist" class="mat-subheading-2 nav-item">
+        <mat-icon class="icon">add_to_queue</mat-icon>
+        <span> Watchlist </span>
+      </mat-list-item>
+      <mat-list-item
+        routerLink="/performance"
+        class="mat-subheading-2 nav-item"
+      >
+        <mat-icon class="icon">ssid_chart</mat-icon>
+        <span> Performance </span>
+      </mat-list-item>
+    </mat-nav-list>
+  </mat-drawer>
+
+  <mat-drawer-content class="main-content-container">
+    <ng-content></ng-content>
+  </mat-drawer-content>
+</mat-drawer-container>

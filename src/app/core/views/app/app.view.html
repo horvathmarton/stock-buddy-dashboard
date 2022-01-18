@@ -1,5 +1,8 @@
-<mat-slide-toggle (change)="toggleDarkMode()" class="dark-mode-toggle"
-  >Dark mode</mat-slide-toggle
->
+<sb-toolbar
+  *ngIf="authQuery.isAuthenticated | async"
+  [toggleSidenav]="toggleSidenav"
+></sb-toolbar>
 
-<router-outlet></router-outlet>
+<sb-sidenav [toggleSidenav]="toggleSidenav">
+  <router-outlet></router-outlet
+></sb-sidenav>
