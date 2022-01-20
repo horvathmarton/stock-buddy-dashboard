@@ -65,3 +65,9 @@
     }
   }
 }
+
+.error-message,
+.no-data {
+  display: block;
+  margin: 0 $margin-size;
+}

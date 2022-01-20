@@ -1,7 +1,22 @@
 <sb-content-header>Portfolio summary</sb-content-header>
 
+<sb-error-message *ngIf="error | async" class="error-message"
+  >An error occurred while fetching the portfolio data.</sb-error-message
+>
+
+<mat-progress-bar
+  *ngIf="!(error | async) && (isLoading | async)"
+  mode="indeterminate"
+></mat-progress-bar>
+
+<span
+  *ngIf="!(isLoading | async) && !(error | async) && !(query.summary | async)"
+  class="mat-subheading-2 no-data"
+  >No portfolio data was found for this user.</span
+>
+
 <mat-tab-group
-  *ngIf="!isLoading"
+  *ngIf="!(isLoading | async) && !(error | async) && (query.summary | async)"
   mat-align-tabs="start"
   animationDuration="0ms"
   class="tab-group"
@@ -18,8 +33,16 @@
         [dividendData]="basicData"
         class="table"
       ></sb-stock-dividend-table>
-      <sb-bar-chart [data]="dividendYield" class="yield"></sb-bar-chart>
-      <sb-bar-chart [data]="yieldOnCost" class="dividend"></sb-bar-chart>
+      <sb-bar-chart
+        [data]="dividendYield"
+        [filterZeroes]="true"
+        class="yield"
+      ></sb-bar-chart>
+      <sb-bar-chart
+        [data]="yieldOnCost"
+        [filterZeroes]="true"
+        class="dividend"
+      ></sb-bar-chart>
       <sb-pie-chart [data]="dividendIncome" class="income"></sb-pie-chart>
     </div>
   </mat-tab>

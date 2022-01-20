@@ -1,9 +1,11 @@
 import { NgModule } from '@angular/core';
-import { ContentHeaderComponent } from './components';
+import { MaterialModule } from '../core/material.module';
+import { ContentHeaderComponent, ErrorMessageComponent } from './components';
 
-const COMPONENTS = [ContentHeaderComponent];
+const COMPONENTS = [ContentHeaderComponent, ErrorMessageComponent];
 
 @NgModule({
+  imports: [MaterialModule],
   declarations: [...COMPONENTS],
   exports: [...COMPONENTS],
 })
