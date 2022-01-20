@@ -6,7 +6,7 @@
   cursor: pointer;
 
   .branding-icon {
-    margin: $margin-size / 2;
+    margin: calc($margin-size / 2);
   }
 
   .toolbar-title {

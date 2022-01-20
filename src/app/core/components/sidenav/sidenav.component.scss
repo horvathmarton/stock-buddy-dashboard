@@ -8,7 +8,7 @@
     align-items: center;
 
     .icon {
-      margin: 0 $margin-size / 4;
+      margin: 0 calc($margin-size / 4);
     }
   }
 }

@@ -1,15 +1,21 @@
-import { Component, OnInit } from '@angular/core';
-import { finalize, tap } from 'rxjs/operators';
-import { StocksService } from '../../services';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Subject } from 'rxjs';
+import { filter, takeUntil, tap } from 'rxjs/operators';
+import { StockPosition } from '../../interfaces/stock-positions.interface';
+import { PortfolioService } from '../../services';
+import { StockPortfolioQuery } from '../../state';
 
 @Component({
   templateUrl: './portfolio.view.html',
   styleUrls: ['./portfolio.view.scss'],
 })
-export class PortfolioSummaryViewComponent implements OnInit {
-  public isLoading = false;
-  public basicData: any;
+export class PortfolioSummaryViewComponent implements OnInit, OnDestroy {
+  private readonly onDestroy = new Subject<boolean>();
 
+  public readonly isLoading = this.query.selectLoading();
+  public readonly error = this.query.selectError();
+
+  public basicData!: StockPosition[];
   public sizeDistribution!: Record<string, number>;
   public sizeDistributionAtCost!: Record<string, number>;
   public sectorDistribution!: Record<string, number>;
@@ -18,37 +24,15 @@ export class PortfolioSummaryViewComponent implements OnInit {
   public yieldOnCost!: Record<string, number>;
   public pnl!: Record<string, number>;
 
-  constructor(private readonly stocksService: StocksService) {}
+  constructor(
+    private readonly stockPortfolioService: PortfolioService,
+    public readonly query: StockPortfolioQuery
+  ) {}
 
   public ngOnInit(): void {
-    this.isLoading = true;
+    this.stockPortfolioService.list();
 
-    this.stocksService
-      .summary()
-      .pipe(
-        tap((response: any) => {
-          this.basicData = Object.values(response.positions);
-          this.sizeDistribution = response.size_distribution;
-          this.sizeDistributionAtCost = response.size_at_cost_distribution;
-          this.sectorDistribution = response.sector_distribution;
-
-          this.dividendIncome = this.extractProperty(
-            response.positions,
-            'dividend_income'
-          );
-          this.dividendYield = this.extractProperty(
-            response.positions,
-            'dividend_yield'
-          );
-          this.yieldOnCost = this.extractProperty(
-            response.positions,
-            'dividend_yield_on_cost'
-          );
-          this.pnl = this.extractProperty(response.positions, 'pnl_percentage');
-        }),
-        finalize(() => (this.isLoading = false))
-      )
-      .subscribe();
+    this.subscribeToSummaryChanges();
   }
 
   private extractProperty(
@@ -61,5 +45,39 @@ export class PortfolioSummaryViewComponent implements OnInit {
 
       return obj;
     }, {} as Record<string, number>);
+  }
+
+  private subscribeToSummaryChanges(): void {
+    this.query.summary
+      .pipe(
+        filter((summary) => !!summary),
+        tap((summary: any) => {
+          this.basicData = Object.values(summary.positions);
+          this.sizeDistribution = summary.size_distribution;
+          this.sizeDistributionAtCost = summary.size_at_cost_distribution;
+          this.sectorDistribution = summary.sector_distribution;
+
+          this.dividendIncome = this.extractProperty(
+            summary.positions,
+            'dividend_income'
+          );
+          this.dividendYield = this.extractProperty(
+            summary.positions,
+            'dividend_yield'
+          );
+          this.yieldOnCost = this.extractProperty(
+            summary.positions,
+            'dividend_yield_on_cost'
+          );
+          this.pnl = this.extractProperty(summary.positions, 'pnl_percentage');
+        }),
+        takeUntil(this.onDestroy)
+      )
+      .subscribe();
+  }
+
+  public ngOnDestroy(): void {
+    this.onDestroy.next(true);
+    this.onDestroy.complete();
   }
 }

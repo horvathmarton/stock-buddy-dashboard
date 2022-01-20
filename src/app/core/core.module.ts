@@ -13,6 +13,8 @@ import { BaseUrlInterceptor } from './interceptors';
 import { AuthenticateInterceptor } from './interceptors/authenticate.interceptor';
 import { MaterialModule } from './material.module';
 import { AppViewComponent, NotFoundViewComponent } from './views';
+import { AkitaNgDevtools } from '@datorama/akita-ngdevtools';
+import { environment } from 'src/environments/environment';
 
 const VIEWS = [AppViewComponent, NotFoundViewComponent];
 const COMPONENTS = [
@@ -30,6 +32,7 @@ const GUARDS = [AuthGuard];
     BrowserAnimationsModule,
     MaterialModule,
     HttpClientModule,
+    environment.production ? [] : AkitaNgDevtools.forRoot(),
   ],
   providers: [
     ...GUARDS,

@@ -11,7 +11,7 @@ export class BarChartComponent implements AfterViewInit {
     series: [],
     chart: {
       height: 350,
-      width: 800,
+      width: 500,
       type: 'bar',
       toolbar: {
         show: false,
@@ -39,6 +39,9 @@ export class BarChartComponent implements AfterViewInit {
   @Input()
   public data!: Record<string, number>;
 
+  @Input()
+  public filterZeroes: boolean = false;
+
   @ViewChild('chart')
   public chart!: ChartComponent;
 
@@ -48,6 +51,7 @@ export class BarChartComponent implements AfterViewInit {
         x: key,
         y: value,
       }))
+      .filter(({ y }) => !(this.filterZeroes && y === 0))
       .sort((a, b) => b.y - a.y);
 
     this.chart.series = [{ data: transformedData }];

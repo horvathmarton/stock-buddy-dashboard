@@ -13,6 +13,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatListModule } from '@angular/material/list';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatSelectModule } from '@angular/material/select';
 
 const MODULES = [
   NgApexchartsModule,
@@ -29,6 +31,8 @@ const MODULES = [
   MatMenuModule,
   MatSidenavModule,
   MatListModule,
+  MatProgressBarModule,
+  MatSelectModule,
 ];
 
 @NgModule({
