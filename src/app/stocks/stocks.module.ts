@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
+import { ReactiveFormsModule } from '@angular/forms';
 import { MaterialModule } from '../core/material.module';
 import { SharedModule } from '../shared/shared.module';
 import {
@@ -20,7 +21,13 @@ const COMPONENTS = [
 ];
 
 @NgModule({
-  imports: [CommonModule, MaterialModule, StocksRoutingModule, SharedModule],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    MaterialModule,
+    StocksRoutingModule,
+    SharedModule,
+  ],
   declarations: [...VIEWS, ...COMPONENTS],
 })
 export class StocksModule {}

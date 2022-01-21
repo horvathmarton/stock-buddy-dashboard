@@ -1,5 +1,9 @@
 @import "../../../../variables";
 
-.title {
+.title-container {
   margin: $margin-size;
+}
+
+.title {
+  margin: 0;
 }

@@ -1,6 +1,9 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { FormBuilder, Validators } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
+import { format } from 'date-fns';
 import { Subject } from 'rxjs';
-import { filter, takeUntil, tap } from 'rxjs/operators';
+import { filter, take, takeUntil, tap } from 'rxjs/operators';
 import { StockPosition } from '../../interfaces/stock-positions.interface';
 import { PortfolioService } from '../../services';
 import { StockPortfolioQuery } from '../../state';
@@ -14,6 +17,10 @@ export class PortfolioSummaryViewComponent implements OnInit, OnDestroy {
 
   public readonly isLoading = this.query.selectLoading();
   public readonly error = this.query.selectError();
+  public readonly controls = this.builder.group({
+    portfolio: ['summary', Validators.required],
+    asOf: [new Date(), Validators.required],
+  });
 
   public basicData!: StockPosition[];
   public sizeDistribution!: Record<string, number>;
@@ -26,13 +33,18 @@ export class PortfolioSummaryViewComponent implements OnInit, OnDestroy {
 
   constructor(
     private readonly stockPortfolioService: PortfolioService,
+    private readonly builder: FormBuilder,
+    private readonly router: Router,
+    private readonly route: ActivatedRoute,
     public readonly query: StockPortfolioQuery
   ) {}
 
   public ngOnInit(): void {
     this.stockPortfolioService.list();
 
-    this.subscribeToSummaryChanges();
+    this.handleControlChanges();
+    this.handleSummaryChanges();
+    this.initializeControls();
   }
 
   private extractProperty(
@@ -47,7 +59,7 @@ export class PortfolioSummaryViewComponent implements OnInit, OnDestroy {
     }, {} as Record<string, number>);
   }
 
-  private subscribeToSummaryChanges(): void {
+  private handleSummaryChanges(): void {
     this.query.summary
       .pipe(
         filter((summary) => !!summary),
@@ -72,6 +84,49 @@ export class PortfolioSummaryViewComponent implements OnInit, OnDestroy {
           this.pnl = this.extractProperty(summary.positions, 'pnl_percentage');
         }),
         takeUntil(this.onDestroy)
+      )
+      .subscribe();
+  }
+
+  private handleControlChanges(): void {
+    this.controls.valueChanges
+      .pipe(
+        tap(({ portfolio, asOf }) =>
+          this.stockPortfolioService.summary(portfolio, asOf)
+        ),
+        tap(({ portfolio, asOf }) =>
+          this.router.navigate([], {
+            relativeTo: this.route,
+            queryParams: { portfolio, asOf: format(asOf, 'yyyy-MM-dd') },
+            queryParamsHandling: 'merge',
+          })
+        ),
+        takeUntil(this.onDestroy)
+      )
+      .subscribe();
+  }
+
+  private initializeControls(): void {
+    this.query.portfolios
+      .pipe(
+        filter((portfolios) => !!portfolios),
+        tap(() => {
+          let queryParams = (this.route.queryParams as any).getValue();
+
+          if (queryParams.asOf) {
+            queryParams = { ...queryParams, asOf: new Date(queryParams.asOf) };
+          }
+
+          if (queryParams.portfolio) {
+            queryParams = {
+              ...queryParams,
+              portfolio: Number.parseInt(queryParams.portfolio),
+            };
+          }
+
+          this.controls.patchValue(queryParams);
+        }),
+        take(1)
       )
       .subscribe();
   }
