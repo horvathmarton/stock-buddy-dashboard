@@ -1,5 +1,18 @@
 @import "../../../../variables";
 
+.header {
+  display: flex;
+
+  .control-form {
+    margin: $margin-size $margin-size 0 0;
+    max-height: 60px;
+
+    .control-field {
+      margin-left: calc($margin-size / 2);
+    }
+  }
+}
+
 .tab-group {
   margin: 0 $margin-size;
   height: 82.5%;
@@ -11,7 +24,7 @@
 
     .table {
       grid-area: table;
-      overflow-y: scroll;
+      overflow-y: auto;
     }
   }
 

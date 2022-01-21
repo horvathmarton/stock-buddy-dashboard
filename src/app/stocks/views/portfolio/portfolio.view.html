@@ -1,4 +1,31 @@
-<sb-content-header>Portfolio summary</sb-content-header>
+<div class="header">
+  <sb-content-header title="Portfolio summary"> </sb-content-header>
+  <span class="divider"></span>
+  <form
+    *ngIf="!(isLoading | async) && !(error | async) && (query.summary | async)"
+    [formGroup]="controls"
+    class="control-form"
+  >
+    <mat-form-field appearance="outline" class="control-field">
+      <mat-label>Portfolio</mat-label>
+      <mat-select formControlName="portfolio">
+        <mat-option value="summary">Summary</mat-option>
+        <mat-option
+          *ngFor="let portfolio of (query.portfolios | async)"
+          [value]="portfolio.id"
+          >{{ portfolio.name }}</mat-option
+        >
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="control-field">
+      <mat-label>As of</mat-label>
+      <input matInput [matDatepicker]="picker" formControlName="asOf" />
+      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-datepicker #picker></mat-datepicker>
+    </mat-form-field>
+  </form>
+</div>
 
 <sb-error-message *ngIf="error | async" class="error-message"
   >An error occurred while fetching the portfolio data.</sb-error-message
