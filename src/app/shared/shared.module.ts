@@ -1,8 +1,20 @@
 import { NgModule } from '@angular/core';
 import { MaterialModule } from '../core/material.module';
-import { ContentHeaderComponent, ErrorMessageComponent } from './components';
+import {
+  BarChartComponent,
+  ContentHeaderComponent,
+  ErrorMessageComponent,
+  PieChartComponent,
+  TreemapChartComponent,
+} from './components';
 
-const COMPONENTS = [ContentHeaderComponent, ErrorMessageComponent];
+const COMPONENTS = [
+  ContentHeaderComponent,
+  ErrorMessageComponent,
+  BarChartComponent,
+  PieChartComponent,
+  TreemapChartComponent,
+];
 
 @NgModule({
   imports: [MaterialModule],
