@@ -117,12 +117,11 @@ export class PortfolioSummaryViewComponent implements OnInit, OnDestroy {
             queryParams = { ...queryParams, asOf: new Date(queryParams.asOf) };
           }
 
-          if (queryParams.portfolio) {
-            queryParams = {
-              ...queryParams,
-              portfolio: Number.parseInt(queryParams.portfolio),
-            };
-          }
+          let portfolio = Number.parseInt(queryParams.portfolio);
+          queryParams = {
+            ...queryParams,
+            portfolio: !Number.isNaN(portfolio) ? portfolio : 'summary',
+          };
 
           this.controls.patchValue(queryParams);
         }),

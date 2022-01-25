@@ -23,7 +23,7 @@ export class PortfolioService {
       .pipe(
         tap((portfolios) => {
           this.store.set(portfolios);
-          this.summary();
+          this.store.setLoading(true);
         }),
         catchError((errorResponse) => {
           this.store.setError(errorResponse.error);
@@ -44,7 +44,15 @@ export class PortfolioService {
       .pipe(
         tap((summary) => this.store.update({ summary })),
         catchError((errorResponse) => {
-          this.store.setError(errorResponse.error);
+          /**
+           * In this case there is no transaction data for the given portfolio up until the as of config
+           * this way we should display the no data screen.
+           */
+          if (errorResponse.status === 404) {
+            this.store.update({ summary: null });
+          } else {
+            this.store.setError(errorResponse.error);
+          }
 
           return EMPTY;
         }),
