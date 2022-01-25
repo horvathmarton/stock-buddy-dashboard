@@ -2,7 +2,7 @@
   <sb-content-header title="Portfolio summary"> </sb-content-header>
   <span class="divider"></span>
   <form
-    *ngIf="!(isLoading | async) && !(error | async) && (query.summary | async)"
+    *ngIf="!(isLoading | async) && !(error | async)"
     [formGroup]="controls"
     class="control-form"
   >
