@@ -68,11 +68,8 @@ export class PortfolioSummaryViewComponent implements OnInit, OnDestroy {
           this.sizeDistribution = summary.size_distribution;
           this.sizeDistributionAtCost = summary.size_at_cost_distribution;
           this.sectorDistribution = summary.sector_distribution;
+          this.dividendIncome = summary.dividend_distribution;
 
-          this.dividendIncome = this.extractProperty(
-            summary.positions,
-            'dividend_income'
-          );
           this.dividendYield = this.extractProperty(
             summary.positions,
             'dividend_yield'
