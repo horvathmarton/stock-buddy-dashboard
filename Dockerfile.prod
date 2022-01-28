@@ -1,0 +1,7 @@
+FROM node:lts-alpine As builder
+WORKDIR /usr/src/app
+COPY . .
+RUN npm install
+RUN npm run build --configuration=production --build-optimizer --aot
+FROM nginx:1.21
+COPY --from=builder /usr/src/app/build/dashboard /usr/share/nginx/html
