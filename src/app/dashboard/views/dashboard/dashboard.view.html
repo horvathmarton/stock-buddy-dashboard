@@ -1,0 +1,44 @@
+<sb-content-header title="Dashboard"></sb-content-header>
+
+<sb-error-message *ngIf="error | async"></sb-error-message>
+
+<mat-progress-bar
+  *ngIf="!(error | async) && (isLoading | async)"
+  mode="indeterminate"
+></mat-progress-bar>
+
+<div
+  *ngIf="currentStrategy && targetStrategy && (indicators | async)"
+  class="content-container"
+>
+  <div class="chart-container">
+    <sb-pie-chart
+      title="Current strategy"
+      [data]="currentStrategy"
+    ></sb-pie-chart>
+    <sb-pie-chart
+      title="Target strategy"
+      [data]="targetStrategy"
+    ></sb-pie-chart>
+  </div>
+  <div class="kpi-container">
+    <sb-kpi
+      name="Total AUM"
+      [value]="(indicators | async)!.totalAum"
+      type="currency"
+      class="kpi"
+    ></sb-kpi>
+    <sb-kpi
+      name="Annualized ROIC"
+      [value]="(indicators | async)!.annualizedRoic"
+      type="percentage"
+      class="kpi"
+    ></sb-kpi>
+    <sb-kpi
+      name="Annual dividend income"
+      [value]="(indicators | async)!.annualDividendIncome"
+      type="currency"
+      class="kpi"
+    ></sb-kpi>
+  </div>
+</div>

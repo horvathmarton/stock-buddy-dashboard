@@ -20,6 +20,12 @@ const routes: Routes = [
       import('../stocks/stocks.module').then((m) => m.StocksModule),
   },
   {
+    path: 'dashboard',
+    canActivate: [AuthGuard],
+    loadChildren: () =>
+      import('../dashboard/dashboard.module').then((m) => m.DashboardModule),
+  },
+  {
     path: '**',
     component: NotFoundViewComponent,
   },
