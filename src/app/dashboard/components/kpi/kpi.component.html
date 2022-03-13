@@ -1,0 +1,9 @@
+<span class="mat-display-1">{{ name | titlecase }}:</span>
+
+<span *ngIf="type === 'currency'" class="mat-display-1">
+  {{ value | currency }}
+</span>
+
+<span *ngIf="type === 'percentage'" class="mat-display-1">
+  {{ value | percent }}
+</span>
