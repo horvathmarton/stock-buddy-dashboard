@@ -1,10 +1,10 @@
 <mat-card class="card">
   <mat-card-title class="title">{{ name }}</mat-card-title>
   <mat-card-content *ngIf="type === 'currency'" class="mat-display-1">
-    {{ value | currency }}
+    {{ value | currency: "USD":"symbol":"1.0-0" }}
   </mat-card-content>
 
   <mat-card-content *ngIf="type === 'percentage'" class="mat-display-1">
-    {{ value | percent }}
+    {{ value | percent: "1.2-2" }}
   </mat-card-content>
 </mat-card>
