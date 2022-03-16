@@ -1,4 +1,10 @@
-import { AfterViewInit, Component, Input, ViewChild } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  Input,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import { ChartComponent } from 'ng-apexcharts';
 
 @Component({
@@ -6,7 +12,7 @@ import { ChartComponent } from 'ng-apexcharts';
   templateUrl: './pie-chart.component.html',
   styleUrls: ['./pie-chart.component.scss'],
 })
-export class PieChartComponent implements AfterViewInit {
+export class PieChartComponent implements OnInit, AfterViewInit {
   public readonly chartOptions: any = {
     series: [],
     chart: {
@@ -23,10 +29,20 @@ export class PieChartComponent implements AfterViewInit {
   };
 
   @Input()
+  public title!: string;
+
+  @Input()
   public data!: Record<string, number>;
 
   @ViewChild('chart')
   public chart!: ChartComponent;
+
+  public ngOnInit(): void {
+    this.chartOptions.title = {
+      text: this.title,
+      align: 'center',
+    };
+  }
 
   public ngAfterViewInit(): void {
     const transformedData = Object.entries(this.data)

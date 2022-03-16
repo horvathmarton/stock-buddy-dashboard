@@ -1,4 +1,12 @@
 :host {
-  display: flex;
-  justify-content: space-between;
+  width: clamp(400px, 50%, 450px);
+}
+
+.card {
+  height: 15vh;
+  text-align: center;
+
+  .title {
+    margin-bottom: 5vh;
+  }
 }

@@ -61,16 +61,22 @@
         class="table"
       ></sb-stock-dividend-table>
       <sb-bar-chart
+        title="Dividend yield"
         [data]="dividendYield"
         [filterZeroes]="true"
         class="yield"
       ></sb-bar-chart>
       <sb-bar-chart
+        title="Dividend yield on cost"
         [data]="yieldOnCost"
         [filterZeroes]="true"
         class="dividend"
       ></sb-bar-chart>
-      <sb-pie-chart [data]="dividendIncome" class="income"></sb-pie-chart>
+      <sb-pie-chart
+        title="Dividend income distribution"
+        [data]="dividendIncome"
+        class="income"
+      ></sb-pie-chart>
     </div>
   </mat-tab>
 
@@ -104,9 +110,17 @@
         [pnlData]="basicData"
         class="table"
       ></sb-stock-pnl-table>
-      <sb-bar-chart [data]="pnl" class="return"></sb-bar-chart>
+      <sb-bar-chart
+        title="Total return"
+        [data]="pnl"
+        class="return"
+      ></sb-bar-chart>
       <!-- TODO: Add the real value here! -->
-      <sb-bar-chart [data]="pnl" class="annualized"></sb-bar-chart>
+      <sb-bar-chart
+        title="Annualized return"
+        [data]="pnl"
+        class="annualized"
+      ></sb-bar-chart>
     </div>
   </mat-tab>
 </mat-tab-group>

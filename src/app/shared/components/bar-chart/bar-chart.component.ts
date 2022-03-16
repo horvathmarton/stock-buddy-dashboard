@@ -1,4 +1,10 @@
-import { AfterViewInit, Component, Input, ViewChild } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  Input,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import { ChartComponent } from 'ng-apexcharts';
 
 @Component({
@@ -6,7 +12,7 @@ import { ChartComponent } from 'ng-apexcharts';
   templateUrl: './bar-chart.component.html',
   styleUrls: ['./bar-chart.component.scss'],
 })
-export class BarChartComponent implements AfterViewInit {
+export class BarChartComponent implements OnInit, AfterViewInit {
   public readonly chartOptions: any = {
     series: [],
     chart: {
@@ -37,6 +43,9 @@ export class BarChartComponent implements AfterViewInit {
   };
 
   @Input()
+  public title!: string;
+
+  @Input()
   public data!: Record<string, number>;
 
   @Input()
@@ -44,6 +53,13 @@ export class BarChartComponent implements AfterViewInit {
 
   @ViewChild('chart')
   public chart!: ChartComponent;
+
+  public ngOnInit(): void {
+    this.chartOptions.title = {
+      text: this.title,
+      align: 'center',
+    };
+  }
 
   public ngAfterViewInit(): void {
     const transformedData = Object.entries(this.data)
