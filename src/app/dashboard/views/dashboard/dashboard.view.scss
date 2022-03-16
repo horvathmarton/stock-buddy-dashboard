@@ -4,14 +4,27 @@
   display: flex;
 }
 
+.error-message,
+.no-data {
+  display: block;
+  width: 95%;
+  margin: auto;
+  text-align: center;
+}
+
 .chart-container {
+  max-width: 50%;
   flex-grow: 1;
+  vertical-align: middle;
+  margin: auto;
 }
 
 .kpi-container {
+  max-width: 50%;
+  flex-grow: 1;
   display: flex;
   flex-direction: column;
-  flex-grow: 1;
+  align-items: center;
   padding-right: calc($margin-size * 4);
 
   .kpi {

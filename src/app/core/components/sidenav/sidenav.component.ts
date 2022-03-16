@@ -26,7 +26,6 @@ export class SidenavComponent implements AfterViewInit, OnDestroy {
   public ngAfterViewInit(): void {
     this.toggleSidenav
       .pipe(
-        tap(() => console.log('triggered')),
         tap(() => this.drawer.toggle()),
         takeUntil(this.onDestroy)
       )

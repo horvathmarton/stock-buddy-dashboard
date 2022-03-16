@@ -1,40 +1,55 @@
 <sb-content-header title="Dashboard"></sb-content-header>
 
-<sb-error-message *ngIf="error | async"></sb-error-message>
-
 <mat-progress-bar
-  *ngIf="!(error | async) && (isLoading | async)"
+  *ngIf="(isLoading | async)"
   mode="indeterminate"
 ></mat-progress-bar>
 
-<div
-  *ngIf="currentStrategy && targetStrategy && (indicators | async)"
-  class="content-container"
->
+<div class="content-container">
   <div class="chart-container">
+    <sb-error-message *ngIf="strategyError | async" class="error-message">
+      An error occurred while fetching user strategy.
+    </sb-error-message>
+
+    <span
+      *ngIf="!(isLoading | async) && !(strategyError | async) && !currentStrategy"
+      class="mat-subheading-2 no-data"
+      >Please select a target strategy.</span
+    >
+
     <sb-pie-chart
+      *ngIf="!(strategyError | async) && currentStrategy"
       title="Current strategy"
       [data]="currentStrategy"
     ></sb-pie-chart>
     <sb-pie-chart
+      *ngIf="!(strategyError | async) && targetStrategy"
       title="Target strategy"
       [data]="targetStrategy"
     ></sb-pie-chart>
   </div>
+
   <div class="kpi-container">
+    <sb-error-message *ngIf="indicatorsError | async" class="error-message">
+      An error occurred while fetching portfolio indicators.
+    </sb-error-message>
+
     <sb-kpi
+      *ngIf="!(indicatorsError | async) && (indicators | async)"
       name="Total AUM"
       [value]="(indicators | async)!.totalAum"
       type="currency"
       class="kpi"
     ></sb-kpi>
     <sb-kpi
+      *ngIf="!(indicatorsError | async) && (indicators | async)"
       name="Annualized ROIC"
       [value]="(indicators | async)!.annualizedRoic"
       type="percentage"
       class="kpi"
     ></sb-kpi>
     <sb-kpi
+      *ngIf="!(indicatorsError | async) && (indicators | async)"
       name="Annual dividend income"
       [value]="(indicators | async)!.annualDividendIncome"
       type="currency"
