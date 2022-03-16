@@ -1,9 +1,10 @@
-<span class="mat-display-1">{{ name | titlecase }}:</span>
+<mat-card class="card">
+  <mat-card-title class="title">{{ name }}</mat-card-title>
+  <mat-card-content *ngIf="type === 'currency'" class="mat-display-1">
+    {{ value | currency }}
+  </mat-card-content>
 
-<span *ngIf="type === 'currency'" class="mat-display-1">
-  {{ value | currency }}
-</span>
-
-<span *ngIf="type === 'percentage'" class="mat-display-1">
-  {{ value | percent }}
-</span>
+  <mat-card-content *ngIf="type === 'percentage'" class="mat-display-1">
+    {{ value | percent }}
+  </mat-card-content>
+</mat-card>
