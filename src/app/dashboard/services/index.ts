@@ -1,1 +1,2 @@
-export * from './dashboard.service';
+export * from './portfolio-indicators.service';
+export * from './strategies.service';

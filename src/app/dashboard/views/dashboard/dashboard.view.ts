@@ -1,32 +1,40 @@
 import { Component, OnInit } from '@angular/core';
-import { filter, take, tap } from 'rxjs/operators';
+import { combineLatest } from 'rxjs';
+import { filter, map, take, tap } from 'rxjs/operators';
 import { Strategy } from '../../interfaces';
-import { DashboardService } from '../../services';
-import { DashboardQuery } from '../../state';
+import { PortfolioIndicatorsService, StrategiesService } from '../../services';
+import { PortfolioIndicatorsQuery, StrategiesQuery } from '../../state';
 
 @Component({
   templateUrl: './dashboard.view.html',
   styleUrls: ['./dashboard.view.scss'],
 })
 export class DashboardViewComponent implements OnInit {
-  public readonly isLoading = this.query.selectLoading();
-  public readonly error = this.query.selectError();
+  public readonly isLoading = combineLatest([
+    this.strategiesQuery.selectLoading(),
+    this.portfolioIndicatorsQuery.selectLoading(),
+  ]).pipe(map(([strategies, indicators]) => strategies || indicators));
+  public readonly strategyError = this.strategiesQuery.selectError();
+  public readonly indicatorsError = this.portfolioIndicatorsQuery.selectError();
 
   public currentStrategy!: Record<string, number>;
   public targetStrategy!: Record<string, number>;
-  public indicators = this.query.indicators.pipe(
+  public indicators = this.portfolioIndicatorsQuery.indicators.pipe(
     filter((indicators) => !!indicators)
   );
 
   constructor(
-    private readonly dashboardService: DashboardService,
-    private readonly query: DashboardQuery
+    private readonly dashboardService: StrategiesService,
+    private readonly portfolioIndicatorsService: PortfolioIndicatorsService,
+    private readonly strategiesQuery: StrategiesQuery,
+    private readonly portfolioIndicatorsQuery: PortfolioIndicatorsQuery
   ) {}
 
   public ngOnInit(): void {
-    this.dashboardService.fetch();
+    this.dashboardService.fetchMyStrategy();
+    this.portfolioIndicatorsService.fetch();
 
-    this.query.me
+    this.strategiesQuery.me
       .pipe(
         filter((strategy) => !!strategy),
         tap((strategy) => {
