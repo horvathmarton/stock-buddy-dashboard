@@ -15,7 +15,7 @@
 
 .tab-group {
   margin: 0 $margin-size;
-  height: 82.5%;
+  height: calc(100% - $content-header-height);
 
   .tab {
     display: grid;

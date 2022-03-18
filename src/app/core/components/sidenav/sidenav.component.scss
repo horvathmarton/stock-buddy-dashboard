@@ -19,4 +19,5 @@
 
 .main-content-container {
   overflow-y: hidden;
+  height: calc(100% - $toolbar-height);
 }
