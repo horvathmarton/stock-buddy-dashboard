@@ -18,3 +18,8 @@ body {
 .divider {
   flex-grow: 1;
 }
+
+.mat-select-panel,
+.mat-datepicker-content {
+  background: #fff;
+}
