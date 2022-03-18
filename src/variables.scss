@@ -1,1 +1,5 @@
 $margin-size: 24px;
+$toolbar-height: 64px;
+$title-font-size: 36px;
+
+$content-header-height: calc(2 * $margin-size + $title-font-size);

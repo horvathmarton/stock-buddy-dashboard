@@ -17,8 +17,6 @@ export class PieChartComponent implements OnInit, AfterViewInit {
     series: [],
     chart: {
       type: 'pie',
-      height: 400,
-      width: 400,
       toolbar: {
         show: false,
       },
@@ -32,12 +30,21 @@ export class PieChartComponent implements OnInit, AfterViewInit {
   public title!: string;
 
   @Input()
+  public height: number = 400;
+
+  @Input()
+  public width: number = 400;
+
+  @Input()
   public data!: Record<string, number>;
 
   @ViewChild('chart')
   public chart!: ChartComponent;
 
   public ngOnInit(): void {
+    this.chartOptions.chart.height = this.height;
+    this.chartOptions.chart.width = this.width;
+
     this.chartOptions.title = {
       text: this.title,
       align: 'center',
