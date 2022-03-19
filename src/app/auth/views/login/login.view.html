@@ -23,16 +23,21 @@
       >{{getErrorMessage(form.get('password'))}}</mat-error
     >
   </mat-form-field>
-  <mat-error *ngIf="formError">{{ formError }}</mat-error>
 
-  <button
-    (click)="login()"
-    [disabled]="isLoading"
-    mat-raised-button
-    color="primary"
-    class="action-button"
-  >
-    <span *ngIf="!isLoading">Login</span>
-    <mat-spinner *ngIf="isLoading" diameter="30"></mat-spinner>
-  </button>
+  <div class="actions-container">
+    <mat-error *ngIf="formError">{{ formError }}</mat-error>
+
+    <div class="divider"></div>
+
+    <button
+      (click)="login()"
+      [disabled]="isLoading"
+      mat-raised-button
+      color="primary"
+      class="action-button"
+    >
+      <span *ngIf="!isLoading">Login</span>
+      <mat-spinner *ngIf="isLoading" diameter="30"></mat-spinner>
+    </button>
+  </div>
 </form>
