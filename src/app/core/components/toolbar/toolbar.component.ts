@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { AuthService } from 'src/app/auth/services';
@@ -8,7 +8,7 @@ import { AuthService } from 'src/app/auth/services';
   templateUrl: './toolbar.component.html',
   styleUrls: ['./toolbar.component.scss'],
 })
-export class ToolbarComponent {
+export class ToolbarComponent implements OnDestroy {
   @Input()
   public toggleSidenav!: Subject<boolean>;
 
@@ -21,5 +21,9 @@ export class ToolbarComponent {
     this.auth.logout();
 
     this.router.navigate(['/auth/login']);
+  }
+
+  public ngOnDestroy() {
+    this.toggleSidenav.next(false);
   }
 }
