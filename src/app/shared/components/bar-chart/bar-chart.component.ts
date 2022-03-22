@@ -5,7 +5,7 @@ import {
   OnInit,
   ViewChild,
 } from '@angular/core';
-import { ChartComponent } from 'ng-apexcharts';
+import { ChartComponent, ApexOptions } from 'ng-apexcharts';
 
 @Component({
   selector: 'sb-bar-chart',
@@ -13,7 +13,7 @@ import { ChartComponent } from 'ng-apexcharts';
   styleUrls: ['./bar-chart.component.scss'],
 })
 export class BarChartComponent implements OnInit, AfterViewInit {
-  public readonly chartOptions: any = {
+  public readonly chartOptions: ApexOptions = {
     series: [],
     chart: {
       height: 350,
@@ -49,7 +49,7 @@ export class BarChartComponent implements OnInit, AfterViewInit {
   public data!: Record<string, number>;
 
   @Input()
-  public filterZeroes: boolean = false;
+  public filterZeroes = false;
 
   @ViewChild('chart')
   public chart!: ChartComponent;
@@ -63,10 +63,7 @@ export class BarChartComponent implements OnInit, AfterViewInit {
 
   public ngAfterViewInit(): void {
     const transformedData = Object.entries(this.data)
-      .map(([key, value]: any) => ({
-        x: key,
-        y: value,
-      }))
+      .map(([key, value]) => ({ x: key, y: value }))
       .filter(({ y }) => !(this.filterZeroes && y === 0))
       .sort((a, b) => b.y - a.y);
 

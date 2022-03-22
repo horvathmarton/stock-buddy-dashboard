@@ -5,7 +5,7 @@ import {
   OnInit,
   ViewChild,
 } from '@angular/core';
-import { ChartComponent } from 'ng-apexcharts';
+import { ApexOptions, ChartComponent } from 'ng-apexcharts';
 
 @Component({
   selector: 'sb-treemap-chart',
@@ -13,7 +13,7 @@ import { ChartComponent } from 'ng-apexcharts';
   styleUrls: ['./treemap-chart.component.scss'],
 })
 export class TreemapChartComponent implements OnInit, AfterViewInit {
-  public readonly chartOptions: any = {
+  public readonly chartOptions: ApexOptions = {
     series: [],
     legend: {
       show: false,
@@ -66,10 +66,7 @@ export class TreemapChartComponent implements OnInit, AfterViewInit {
 
   public ngAfterViewInit(): void {
     const transformedData = Object.entries(this.data)
-      .map(([key, value]: any) => ({
-        x: key,
-        y: value,
-      }))
+      .map(([key, value]) => ({ x: key, y: value }))
       .sort((a, b) => b.y - a.y);
 
     this.chart.series = [{ data: transformedData }];

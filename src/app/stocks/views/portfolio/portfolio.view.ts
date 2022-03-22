@@ -2,11 +2,14 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { format } from 'date-fns';
-import { Subject } from 'rxjs';
-import { filter, take, takeUntil, tap } from 'rxjs/operators';
+import { Observable, Subject } from 'rxjs';
+import { filter, switchMap, take, takeUntil, tap } from 'rxjs/operators';
+import { notNull } from 'src/app/shared/utils';
 import { StockPosition } from '../../interfaces/stock-positions.interface';
 import { PortfolioService } from '../../services';
 import { StockPortfolioQuery } from '../../state';
+
+type PageControlValues = { portfolio: string; asOf: Date };
 
 @Component({
   templateUrl: './portfolio.view.html',
@@ -18,8 +21,10 @@ export class PortfolioSummaryViewComponent implements OnInit, OnDestroy {
   public readonly isLoading = this.query.selectLoading();
   public readonly error = this.query.selectError();
   public readonly controls = this.builder.group({
+    /* eslint-disable @typescript-eslint/unbound-method */
     portfolio: ['summary', Validators.required],
     asOf: [new Date(), Validators.required],
+    /* eslint-enable */
   });
 
   public basicData!: StockPosition[];
@@ -48,22 +53,22 @@ export class PortfolioSummaryViewComponent implements OnInit, OnDestroy {
   }
 
   private extractProperty(
-    data: Record<string, Record<string, number>>,
-    property: string
+    data: Record<string, StockPosition>,
+    property: 'dividend_yield' | 'dividend_yield_on_cost' | 'pnl_percentage'
   ): Record<string, number> {
-    return Object.entries(data).reduce((obj, curr) => {
+    return Object.entries(data).reduce<Record<string, number>>((obj, curr) => {
       const [key, value] = curr;
-      obj[key as any] = (value as any)[property];
+      obj[key] = value[property];
 
       return obj;
-    }, {} as Record<string, number>);
+    }, {});
   }
 
   private handleSummaryChanges(): void {
     this.query.summary
       .pipe(
-        filter((summary) => !!summary),
-        tap((summary: any) => {
+        filter(notNull),
+        tap((summary) => {
           this.basicData = Object.values(summary.positions);
           this.sizeDistribution = summary.size_distribution;
           this.sizeDistributionAtCost = summary.size_at_cost_distribution;
@@ -88,16 +93,16 @@ export class PortfolioSummaryViewComponent implements OnInit, OnDestroy {
   private handleControlChanges(): void {
     this.controls.valueChanges
       .pipe(
-        tap(({ portfolio, asOf }) =>
+        tap(({ portfolio, asOf }: PageControlValues) =>
           this.stockPortfolioService.summary(portfolio, asOf)
         ),
-        tap(({ portfolio, asOf }) =>
-          this.router.navigate([], {
+        tap(({ portfolio, asOf }: PageControlValues) => {
+          void this.router.navigate([], {
             relativeTo: this.route,
             queryParams: { portfolio, asOf: format(asOf, 'yyyy-MM-dd') },
             queryParamsHandling: 'merge',
-          })
-        ),
+          });
+        }),
         takeUntil(this.onDestroy)
       )
       .subscribe();
@@ -107,17 +112,20 @@ export class PortfolioSummaryViewComponent implements OnInit, OnDestroy {
     this.query.portfolios
       .pipe(
         filter((portfolios) => !!portfolios),
-        tap(() => {
-          let queryParams = (this.route.queryParams as any).getValue();
-
+        switchMap(
+          () => this.route.queryParams as Observable<PageControlValues>
+        ),
+        tap((queryParams) => {
           if (queryParams.asOf) {
             queryParams = { ...queryParams, asOf: new Date(queryParams.asOf) };
           }
 
-          let portfolio = Number.parseInt(queryParams.portfolio);
+          const portfolio = Number.parseInt(queryParams.portfolio);
           queryParams = {
             ...queryParams,
-            portfolio: !Number.isNaN(portfolio) ? portfolio : 'summary',
+            portfolio: !Number.isNaN(portfolio)
+              ? portfolio.toString()
+              : 'summary',
           };
 
           this.controls.patchValue(queryParams);
