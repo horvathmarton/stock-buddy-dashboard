@@ -1,7 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { EMPTY } from 'rxjs';
-import { catchError, delay, finalize, tap } from 'rxjs/operators';
+import { catchError, finalize, tap } from 'rxjs/operators';
+import { ErrorResponse } from 'src/app/shared/types';
 import { Strategy } from '../interfaces';
 import { StrategiesStore } from '../state';
 
@@ -20,10 +21,10 @@ export class StrategiesService {
     this.store.setLoading(true);
 
     this.http
-      .get<MyStrategy>(`/dashboard/strategies/me`)
+      .get<MyStrategy>(`/dashboard/strategies/me/`)
       .pipe(
-        tap((me) => this.store.update({ me })),
-        catchError((errorResponse) => {
+        tap((me) => void this.store.update({ me })),
+        catchError((errorResponse: ErrorResponse) => {
           if (errorResponse.status === 404) {
             this.store.update({ me: null });
           } else {

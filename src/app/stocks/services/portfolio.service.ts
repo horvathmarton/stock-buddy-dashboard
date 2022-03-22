@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { format } from 'date-fns';
 import { EMPTY } from 'rxjs';
 import { catchError, finalize, tap } from 'rxjs/operators';
+import { ErrorResponse } from 'src/app/shared/types';
 import { StockPortfolio, StockPortfolioSummary } from '../interfaces';
 import { StockPortfolioStore } from '../state';
 
@@ -25,7 +26,7 @@ export class PortfolioService {
           this.store.set(portfolios);
           this.store.setLoading(true);
         }),
-        catchError((errorResponse) => {
+        catchError((errorResponse: ErrorResponse) => {
           this.store.setError(errorResponse.error);
 
           return EMPTY;
@@ -34,7 +35,7 @@ export class PortfolioService {
       .subscribe();
   }
 
-  public summary(id: string = 'summary', asOf: Date = new Date()): void {
+  public summary(id = 'summary', asOf: Date = new Date()): void {
     this.store.setLoading(true);
 
     this.http
@@ -42,8 +43,8 @@ export class PortfolioService {
         `/stocks/portfolios/${id}/?asOf=${format(asOf, 'yyyy-MM-dd')}`
       )
       .pipe(
-        tap((summary) => this.store.update({ summary })),
-        catchError((errorResponse) => {
+        tap((summary) => void this.store.update({ summary })),
+        catchError((errorResponse: ErrorResponse) => {
           /**
            * In this case there is no transaction data for the given portfolio up until the as of config
            * this way we should display the no data screen.

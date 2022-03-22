@@ -21,7 +21,7 @@ export class AuthService {
       })
       .pipe(
         pluck('token'),
-        tap((token) => this.store.update({ authToken: token })),
+        tap((token) => void this.store.update({ authToken: token })),
         mapTo(undefined)
       );
   }

@@ -20,7 +20,7 @@ export class ToolbarComponent implements OnDestroy {
   public logout(): void {
     this.auth.logout();
 
-    this.router.navigate(['/auth/login']);
+    void this.router.navigate(['/auth/login']);
   }
 
   public ngOnDestroy() {

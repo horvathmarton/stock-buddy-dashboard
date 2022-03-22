@@ -13,10 +13,10 @@ import { AuthQuery } from 'src/app/auth/state';
 export class AuthenticateInterceptor implements HttpInterceptor {
   constructor(private readonly query: AuthQuery) {}
 
-  public intercept(
-    request: HttpRequest<any>,
+  public intercept<T = unknown>(
+    request: HttpRequest<T>,
     next: HttpHandler
-  ): Observable<HttpEvent<any>> {
+  ): Observable<HttpEvent<T>> {
     return this.query.authToken.pipe(
       take(1),
       switchMap((token) => {

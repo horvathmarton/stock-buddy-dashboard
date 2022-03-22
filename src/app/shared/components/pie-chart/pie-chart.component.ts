@@ -5,7 +5,7 @@ import {
   OnInit,
   ViewChild,
 } from '@angular/core';
-import { ChartComponent } from 'ng-apexcharts';
+import { ApexOptions, ChartComponent } from 'ng-apexcharts';
 
 @Component({
   selector: 'sb-pie-chart',
@@ -13,7 +13,7 @@ import { ChartComponent } from 'ng-apexcharts';
   styleUrls: ['./pie-chart.component.scss'],
 })
 export class PieChartComponent implements OnInit, AfterViewInit {
-  public readonly chartOptions: any = {
+  public readonly chartOptions: ApexOptions = {
     series: [],
     chart: {
       type: 'pie',
@@ -30,10 +30,10 @@ export class PieChartComponent implements OnInit, AfterViewInit {
   public title!: string;
 
   @Input()
-  public height: number = 400;
+  public height = 400;
 
   @Input()
-  public width: number = 400;
+  public width = 400;
 
   @Input()
   public data!: Record<string, number>;
@@ -42,8 +42,10 @@ export class PieChartComponent implements OnInit, AfterViewInit {
   public chart!: ChartComponent;
 
   public ngOnInit(): void {
-    this.chartOptions.chart.height = this.height;
-    this.chartOptions.chart.width = this.width;
+    /* eslint-disable @typescript-eslint/no-non-null-assertion */
+    this.chartOptions.chart!.height = this.height;
+    this.chartOptions.chart!.width = this.width;
+    /* eslint-enable */
 
     this.chartOptions.title = {
       text: this.title,
@@ -53,10 +55,7 @@ export class PieChartComponent implements OnInit, AfterViewInit {
 
   public ngAfterViewInit(): void {
     const transformedData = Object.entries(this.data)
-      .map(([key, value]: any) => ({
-        x: key,
-        y: value,
-      }))
+      .map(([key, value]) => ({ x: key, y: value }))
       .sort((a, b) => a.y - b.y);
 
     const labels = transformedData.map((a) => a.x);

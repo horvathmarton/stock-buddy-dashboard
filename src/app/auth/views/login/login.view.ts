@@ -3,8 +3,11 @@ import { AbstractControl, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { EMPTY } from 'rxjs';
 import { catchError, filter, finalize, take, tap } from 'rxjs/operators';
+import { ErrorResponse } from 'src/app/shared/types';
 import { AuthService } from '../../services';
 import { AuthQuery } from '../../state';
+
+type LoginFormValues = { username: string; password: string };
 
 @Component({
   templateUrl: './login.view.html',
@@ -15,8 +18,10 @@ export class LoginViewComponent implements OnInit {
   public formError: string | null = null;
 
   public form = this.fb.group({
+    /* eslint-disable @typescript-eslint/unbound-method */
     username: [null, [Validators.required]],
     password: [null, [Validators.required]],
+    /* eslint-enable */
   });
 
   constructor(
@@ -31,7 +36,7 @@ export class LoginViewComponent implements OnInit {
       .pipe(
         take(1),
         filter((authenticated) => authenticated),
-        tap(() => this.router.navigate(['/']))
+        tap(() => void this.router.navigate(['/']))
       )
       .subscribe();
   }
@@ -39,7 +44,7 @@ export class LoginViewComponent implements OnInit {
   public login() {
     if (!this.form.valid) return;
 
-    const { username, password } = this.form.value;
+    const { username, password } = this.form.value as LoginFormValues;
 
     this.isLoading = true;
     this.formError = null;
@@ -47,15 +52,15 @@ export class LoginViewComponent implements OnInit {
     this.auth
       .login(username, password)
       .pipe(
-        tap(() => this.router.navigate(['/'])),
-        catchError((errorResponse) => {
+        tap(() => void this.router.navigate(['/'])),
+        catchError((errorResponse: ErrorResponse) => {
           if (
             errorResponse?.error?.non_field_errors?.[0] ===
             'Unable to log in with provided credentials.'
           ) {
             this.formError = 'Invalid username or password.';
           } else {
-            this.formError = errorResponse?.error;
+            this.formError = 'An unhandled error happened.';
           }
 
           return EMPTY;

@@ -18,10 +18,10 @@ export class BaseUrlInterceptor implements HttpInterceptor {
     }
   }
 
-  public intercept(
-    request: HttpRequest<any>,
+  public intercept<T = unknown>(
+    request: HttpRequest<T>,
     next: HttpHandler
-  ): Observable<HttpEvent<any>> {
+  ): Observable<HttpEvent<T>> {
     /*
      * We want to allow the user to call other APIs so if the URL doesn't
      * start with a slash we just pass it through.
