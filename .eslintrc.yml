@@ -1,0 +1,13 @@
+parser: "@typescript-eslint/parser"
+plugins:
+  - "@typescript-eslint"
+parserOptions:
+  ecmaVersion: 2018
+  sourceType: module
+  project:
+    - ./tsconfig.json
+    - ./tsconfig.spec.json
+extends:
+  - "plugin:@typescript-eslint/recommended"
+  - "plugin:@typescript-eslint/recommended-requiring-type-checking"
+  - "prettier"
