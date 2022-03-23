@@ -1,12 +1,12 @@
-name: Staging CD
+name: Production CD
 
 on:
   push:
-    branches: [master]
+    tags: ["*.*.*"]
 
 jobs:
   deploy:
-    name: Deploy staging
+    name: Deploy production
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -20,10 +20,10 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-node-
       - run: npm ci
-      - run: npm run build --configuration=staging
+      - run: npm run build --configuration=production
       - run: |
           install -m 600 -D /dev/null ~/.ssh/id_rsa
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
           echo "${{ secrets.SSH_KNOWN_HOSTS }}" > ~/.ssh/known_hosts
-      - run: ssh -i ~/.ssh/id_rsa ${{ secrets.STAGING_SERVER_USER }}@${{ secrets.STAGING_SERVER_IP }} -t "rm -rf /var/www/stock-buddy-dashboard-staging/*"
-      - run: scp -i ~/.ssh/id_rsa -r ./build/dashboard/* ${{ secrets.STAGING_SERVER_USER }}@${{ secrets.STAGING_SERVER_IP }}:/var/www/stock-buddy-dashboard-staging
+      - run: ssh -i ~/.ssh/id_rsa ${{ secrets.PRODUCTION_SERVER_USER }}@${{ secrets.PRODUCTION_SERVER_IP }} -t "rm -rf /var/www/stock-buddy-dashboard-production/*"
+      - run: scp -i ~/.ssh/id_rsa -r ./build/dashboard/* ${{ secrets.PRODUCTION_SERVER_USER }}@${{ secrets.PRODUCTION_SERVER_IP }}:/var/www/stock-buddy-dashboard-production
