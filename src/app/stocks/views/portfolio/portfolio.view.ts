@@ -35,6 +35,7 @@ export class PortfolioSummaryViewComponent implements OnInit, OnDestroy {
   public dividendYield!: Record<string, number>;
   public yieldOnCost!: Record<string, number>;
   public pnl!: Record<string, number>;
+  public annualizedPnl!: Record<string, number>;
 
   constructor(
     private readonly stockPortfolioService: PortfolioService,
@@ -84,6 +85,7 @@ export class PortfolioSummaryViewComponent implements OnInit, OnDestroy {
             'dividend_yield_on_cost'
           );
           this.pnl = this.extractProperty(summary.positions, 'pnl_percentage');
+          this.annualizedPnl = summary.annualized_pnls;
         }),
         takeUntil(this.onDestroy)
       )
