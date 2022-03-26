@@ -18,7 +18,7 @@ export class SidenavComponent implements AfterViewInit, OnDestroy {
   private onDestroy = new Subject<boolean>();
 
   @Input()
-  public toggleSidenav!: Observable<boolean>;
+  public toggleSidenav!: Observable<boolean | undefined>;
 
   @ViewChild(MatDrawer)
   public drawer!: MatDrawer;
@@ -26,7 +26,7 @@ export class SidenavComponent implements AfterViewInit, OnDestroy {
   public ngAfterViewInit(): void {
     this.toggleSidenav
       .pipe(
-        tap(() => void this.drawer.toggle()),
+        tap((isOpen) => void this.drawer.toggle(isOpen)),
         takeUntil(this.onDestroy)
       )
       .subscribe();
