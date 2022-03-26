@@ -4,7 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { format } from 'date-fns';
 import { Observable, Subject } from 'rxjs';
 import { filter, switchMap, take, takeUntil, tap } from 'rxjs/operators';
-import { notNull } from 'src/app/shared/utils';
+import { isDefined } from 'src/app/shared/utils';
 import { StockPosition } from '../../interfaces/stock-positions.interface';
 import { PortfolioService } from '../../services';
 import { StockPortfolioQuery } from '../../state';
@@ -67,7 +67,7 @@ export class PortfolioSummaryViewComponent implements OnInit, OnDestroy {
   private handleSummaryChanges(): void {
     this.query.summary
       .pipe(
-        filter(notNull),
+        filter(isDefined),
         tap((summary) => {
           this.basicData = Object.values(summary.positions);
           this.sizeDistribution = summary.size_distribution;

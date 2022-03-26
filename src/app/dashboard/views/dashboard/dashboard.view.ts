@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { combineLatest } from 'rxjs';
 import { filter, map, take, tap } from 'rxjs/operators';
-import { notNull } from 'src/app/shared/utils';
+import { isDefined } from 'src/app/shared/utils';
 import { Strategy } from '../../interfaces';
 import { PortfolioIndicatorsService, StrategiesService } from '../../services';
 import { PortfolioIndicatorsQuery, StrategiesQuery } from '../../state';
@@ -37,7 +37,7 @@ export class DashboardViewComponent implements OnInit {
 
     this.strategiesQuery.me
       .pipe(
-        filter(notNull),
+        filter(isDefined),
         tap((strategy) => {
           this.currentStrategy = this.transformStrategyItems(strategy.current);
           this.targetStrategy = this.transformStrategyItems(strategy.target);
