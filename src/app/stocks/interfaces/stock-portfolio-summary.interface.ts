@@ -33,4 +33,7 @@ export interface StockPortfolioSummary {
 
   /** Size distribution of the portfolio per position at latest price. */
   size_distribution: Record<string, number>;
+
+  /** Annualized return of the portfolio per position at the snapshot date. */
+  annualized_pnls: Record<string, number>;
 }
