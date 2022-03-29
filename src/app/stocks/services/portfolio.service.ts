@@ -40,7 +40,7 @@ export class PortfolioService {
 
     this.http
       .get<StockPortfolioSummary>(
-        `/stocks/portfolios/${id}/?asOf=${format(asOf, 'yyyy-MM-dd')}`
+        `/stocks/portfolios/${id}/?as_of=${format(asOf, 'yyyy-MM-dd')}`
       )
       .pipe(
         tap((summary) => void this.store.update({ summary })),

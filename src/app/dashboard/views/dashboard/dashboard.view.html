@@ -37,21 +37,21 @@
     <sb-kpi
       *ngIf="!(indicatorsError | async) && (indicators | async)"
       name="Total AUM"
-      [value]="(indicators | async)!.totalAum"
+      [value]="(indicators | async)!.total_aum"
       type="currency"
       class="kpi"
     ></sb-kpi>
     <sb-kpi
       *ngIf="!(indicatorsError | async) && (indicators | async)"
       name="Annualized ROIC"
-      [value]="(indicators | async)!.annualizedRoic"
+      [value]="(indicators | async)!.annualized_roic"
       type="percentage"
       class="kpi"
     ></sb-kpi>
     <sb-kpi
       *ngIf="!(indicatorsError | async) && (indicators | async)"
       name="Annual dividend income"
-      [value]="(indicators | async)!.annualDividendIncome"
+      [value]="(indicators | async)!.annual_dividend_income"
       type="currency"
       class="kpi"
     ></sb-kpi>
