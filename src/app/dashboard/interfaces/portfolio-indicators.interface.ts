@@ -1,5 +1,5 @@
 export interface PortfolioIndicators {
-  totalAum: number;
-  annualizedRoic: number;
-  annualDividendIncome: number;
+  total_aum: number;
+  annualized_roic: number;
+  annual_dividend_income: number;
 }

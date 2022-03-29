@@ -9,7 +9,7 @@ import { StockPosition } from '../../interfaces/stock-positions.interface';
 import { PortfolioService } from '../../services';
 import { StockPortfolioQuery } from '../../state';
 
-type PageControlValues = { portfolio: string; asOf: Date };
+type PageControlValues = { portfolio: string; as_of: Date };
 
 @Component({
   templateUrl: './portfolio.view.html',
@@ -95,13 +95,13 @@ export class PortfolioSummaryViewComponent implements OnInit, OnDestroy {
   private handleControlChanges(): void {
     this.controls.valueChanges
       .pipe(
-        tap(({ portfolio, asOf }: PageControlValues) =>
-          this.stockPortfolioService.summary(portfolio, asOf)
+        tap(({ portfolio, as_of }: PageControlValues) =>
+          this.stockPortfolioService.summary(portfolio, as_of)
         ),
-        tap(({ portfolio, asOf }: PageControlValues) => {
+        tap(({ portfolio, as_of }: PageControlValues) => {
           void this.router.navigate([], {
             relativeTo: this.route,
-            queryParams: { portfolio, asOf: format(asOf, 'yyyy-MM-dd') },
+            queryParams: { portfolio, as_of: format(as_of, 'yyyy-MM-dd') },
             queryParamsHandling: 'merge',
           });
         }),
@@ -118,8 +118,11 @@ export class PortfolioSummaryViewComponent implements OnInit, OnDestroy {
           () => this.route.queryParams as Observable<PageControlValues>
         ),
         tap((queryParams) => {
-          if (queryParams.asOf) {
-            queryParams = { ...queryParams, asOf: new Date(queryParams.asOf) };
+          if (queryParams.as_of) {
+            queryParams = {
+              ...queryParams,
+              as_of: new Date(queryParams.as_of),
+            };
           }
 
           const portfolio = Number.parseInt(queryParams.portfolio);
