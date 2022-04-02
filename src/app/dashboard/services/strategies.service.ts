@@ -21,7 +21,7 @@ export class StrategiesService {
     this.store.setLoading(true);
 
     this.http
-      .get<MyStrategy>(`/dashboard/strategies/me/`)
+      .get<MyStrategy>(`/dashboard/strategies/me`)
       .pipe(
         tap((me) => void this.store.update({ me })),
         catchError((errorResponse: ErrorResponse) => {
