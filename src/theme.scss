@@ -1,5 +1,7 @@
 @import "~@angular/material/theming";
 
+@import "~@angular/material/prebuilt-themes/indigo-pink.css";
+
 @import "./app/core/views/app/app.view.theme";
 
 @import url("https://fonts.googleapis.com/css2?family=Comfortaa:wght@500&display=swap");
@@ -55,10 +57,11 @@ $mat-dark-theme: mat-dark-theme($dark-primary, $dark-accent, $dark-warn);
 
 @include app-style-core();
 
-.light-mode {
-  @include app-theme($mat-light-theme);
-}
+// TODO: Add me back!
+// .light-mode {
+//   @include app-theme($mat-light-theme);
+// }
 
-.dark-mode {
-  @include app-theme($mat-dark-theme);
-}
+// .dark-mode {
+//   @include app-theme($mat-dark-theme);
+// }

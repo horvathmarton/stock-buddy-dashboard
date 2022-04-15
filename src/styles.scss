@@ -15,11 +15,22 @@ body {
   font-size: 1.1em;
 }
 
+.mat-fab.mat-button-base {
+  height: 48px;
+  width: 48px;
+
+  .mat-button-wrapper {
+    padding: 0;
+  }
+}
+
 .divider {
   flex-grow: 1;
 }
 
-.mat-select-panel,
-.mat-datepicker-content {
-  background: #fff;
-}
+// TODO: Add me back!
+// .mat-select-panel,
+// .mat-datepicker-content,
+// .mat-dialog-container {
+//   background: #fff;
+// }

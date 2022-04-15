@@ -1,6 +1,6 @@
 export interface StockPortfolio {
-  id: string;
+  id?: number;
   name: string;
-  description: string;
-  owner: string;
+  description?: string;
+  owner?: string;
 }
