@@ -1,9 +1,14 @@
 <mat-table [dataSource]="dataSource" matSort class="table">
   <ng-container matColumnDef="ticker">
-    <mat-header-cell *matHeaderCellDef mat-sort-header>Ticker</mat-header-cell>
-    <mat-cell *matCellDef="let row">
+    <mat-header-cell *matHeaderCellDef mat-sort-header class="wide-cell"
+      >Ticker</mat-header-cell
+    >
+    <mat-cell *matCellDef="let row" class="wide-cell">
       {{ row.ticker }}
     </mat-cell>
+    <mat-footer-cell *matFooterCellDef class="wide-cell"
+      >Add a new position</mat-footer-cell
+    >
   </ng-container>
 
   <ng-container matColumnDef="name">
@@ -65,10 +70,35 @@
     </mat-cell>
   </ng-container>
 
+  <ng-container matColumnDef="controls">
+    <mat-header-cell *matHeaderCellDef mat-sort-header></mat-header-cell>
+
+    <mat-cell *matCellDef="let row" class="controls-cell">
+      <button
+        (click)="addToPosition(row.ticker, $event)"
+        color="primary"
+        mat-icon-button
+      >
+        <mat-icon>add_circle</mat-icon>
+      </button>
+    </mat-cell>
+
+    <mat-footer-cell *matFooterCellDef class="controls-cell">
+      <button
+        (click)="addToPosition(null, $event)"
+        color="primary"
+        mat-icon-button
+      >
+        <mat-icon>add_circle</mat-icon>
+      </button>
+    </mat-footer-cell>
+  </ng-container>
+
   <mat-header-row
     *matHeaderRowDef="displayedColumns; sticky: true"
   ></mat-header-row>
   <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+  <mat-footer-row *matFooterRowDef="['ticker', 'controls']"></mat-footer-row>
 
   <mat-row class="mat-row" *matNoDataRow>
     <mat-cell colspan="8">No data matching the filter.</mat-cell>

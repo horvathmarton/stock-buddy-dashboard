@@ -9,6 +9,7 @@ import {
   StockPnlTableComponent,
   StockPortfolioDialogComponent,
   StockRiskTable,
+  StockTransactionDialogComponent,
 } from './components';
 import { StocksRoutingModule } from './stocks-routing.module';
 import { PortfolioSummaryViewComponent } from './views';
@@ -20,6 +21,7 @@ const COMPONENTS = [
   StockDividendTableComponent,
   StockPnlTableComponent,
   StockPortfolioDialogComponent,
+  StockTransactionDialogComponent,
 ];
 
 @NgModule({

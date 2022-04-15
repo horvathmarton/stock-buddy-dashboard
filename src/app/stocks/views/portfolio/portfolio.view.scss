@@ -85,8 +85,18 @@
 
 .error-message,
 .no-data {
-  display: block;
+  height: 100%;
+  width: 100%;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
   margin: 0 $margin-size;
+
+  .cta-button {
+    margin-top: $margin-size;
+  }
 }
 
 ::ng-deep span.mat-option-text {

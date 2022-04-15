@@ -58,8 +58,17 @@
 <span
   *ngIf="!(isLoading | async) && !(error | async) && !(query.summary | async)"
   class="mat-subheading-2 no-data"
-  >No portfolio data was found for this user.</span
 >
+  This portfolio has no positions.
+  <button
+    mat-flat-button
+    (click)="createTransaction.next()"
+    color="primary"
+    class="cta-button"
+  >
+    Add the first transaction
+  </button>
+</span>
 
 <mat-tab-group
   *ngIf="!(isLoading | async) && !(error | async) && (query.summary | async)"
@@ -70,6 +79,7 @@
   <mat-tab label="Base data">
     <sb-basic-stock-data-table
       [positions]="basicData"
+      [createTransaction]="createTransaction"
     ></sb-basic-stock-data-table>
   </mat-tab>
 

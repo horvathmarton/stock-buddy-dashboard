@@ -106,4 +106,8 @@ export class PortfolioService {
       .subscribe();
     /* eslint-enable */
   }
+
+  public select(portfolio?: StockPortfolio): void {
+    this.store.setActive(portfolio ? portfolio.id : null);
+  }
 }

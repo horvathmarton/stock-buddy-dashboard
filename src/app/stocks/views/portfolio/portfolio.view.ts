@@ -14,10 +14,16 @@ import {
   withLatestFrom,
 } from 'rxjs/operators';
 import { isDefined } from 'src/app/shared/utils';
-import { StockPortfolioDialogComponent } from '../../components';
-import { StockPortfolio } from '../../interfaces';
-import { StockPosition } from '../../interfaces/stock-positions.interface';
-import { PortfolioService } from '../../services';
+import {
+  StockPortfolioDialogComponent,
+  StockTransactionDialogComponent,
+} from '../../components';
+import {
+  StockPortfolio,
+  StockPosition,
+  StockTransaction,
+} from '../../interfaces';
+import { PortfolioService, StockService } from '../../services';
 import { StockPortfolioQuery } from '../../state';
 
 type PageControlValues = { portfolio: StockPortfolio; as_of: Date };
@@ -29,7 +35,7 @@ type PageControlValues = { portfolio: StockPortfolio; as_of: Date };
 export class PortfolioSummaryViewComponent implements OnInit, OnDestroy {
   private readonly onDestroy = new Subject<boolean>();
 
-  private readonly STOCK_PORTFOLIO_DIALOG_CONFIG = {
+  private readonly DIALOG_BASE_CONFIG = {
     minHeight: '300px',
     minWidth: '400px',
     width: '60vw',
@@ -43,6 +49,7 @@ export class PortfolioSummaryViewComponent implements OnInit, OnDestroy {
 
   public readonly isLoading = this.query.selectLoading();
   public readonly error = this.query.selectError();
+  public readonly createTransaction = new Subject<string | null>();
   public readonly controls = this.builder.group({
     /* eslint-disable @typescript-eslint/unbound-method */
     portfolio: [this.SUMMARY_VALUE, Validators.required],
@@ -62,10 +69,11 @@ export class PortfolioSummaryViewComponent implements OnInit, OnDestroy {
 
   constructor(
     private readonly dialog: MatDialog,
-    private readonly stockPortfolioService: PortfolioService,
     private readonly builder: FormBuilder,
     private readonly router: Router,
     private readonly route: ActivatedRoute,
+    private readonly stockPortfolioService: PortfolioService,
+    private readonly stockService: StockService,
     public readonly query: StockPortfolioQuery
   ) {}
 
@@ -75,11 +83,12 @@ export class PortfolioSummaryViewComponent implements OnInit, OnDestroy {
     this.handleControlChanges();
     this.handleSummaryChanges();
     this.initializeControls();
+    this.handleTransactionCreation();
   }
 
   public createPortfolio(): void {
     this.dialog
-      .open(StockPortfolioDialogComponent, this.STOCK_PORTFOLIO_DIALOG_CONFIG)
+      .open(StockPortfolioDialogComponent, this.DIALOG_BASE_CONFIG)
       .afterClosed()
       .pipe(
         filter((result) => !!result),
@@ -98,7 +107,7 @@ export class PortfolioSummaryViewComponent implements OnInit, OnDestroy {
         switchMap((portfolios) =>
           this.dialog
             .open(StockPortfolioDialogComponent, {
-              ...this.STOCK_PORTFOLIO_DIALOG_CONFIG,
+              ...this.DIALOG_BASE_CONFIG,
               data: portfolios.find((p) => p.id === id),
             })
             .afterClosed()
@@ -152,6 +161,17 @@ export class PortfolioSummaryViewComponent implements OnInit, OnDestroy {
   }
 
   private handleControlChanges(): void {
+    this.controls.controls.portfolio.valueChanges
+      .pipe(
+        tap((portfolio: StockPortfolio) =>
+          this.stockPortfolioService.select(
+            portfolio.id !== this.SUMMARY_VALUE.id ? portfolio : undefined
+          )
+        ),
+        takeUntil(this.onDestroy)
+      )
+      .subscribe();
+
     this.controls.valueChanges
       .pipe(
         /* eslint-disable @typescript-eslint/no-unsafe-assignment */
@@ -203,8 +223,29 @@ export class PortfolioSummaryViewComponent implements OnInit, OnDestroy {
             ...queryParams,
             portfolio: portfolio ?? this.SUMMARY_VALUE,
           });
+          this.stockPortfolioService.select(portfolio);
         }),
         take(1)
+      )
+      .subscribe();
+  }
+
+  private handleTransactionCreation(): void {
+    this.createTransaction
+      .pipe(
+        switchMap((ticker) => {
+          return this.dialog
+            .open(StockTransactionDialogComponent, {
+              ...this.DIALOG_BASE_CONFIG,
+              data: { ticker },
+            })
+            .afterClosed();
+        }),
+        filter((result) => !!result),
+        tap((transaction: StockTransaction) =>
+          this.stockService.createTransaction(transaction)
+        ),
+        takeUntil(this.onDestroy)
       )
       .subscribe();
   }

@@ -16,9 +16,10 @@ import { MatListModule } from '@angular/material/list';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatSelectModule } from '@angular/material/select';
 import { MatDatepickerModule } from '@angular/material/datepicker';
-import { MatNativeDateModule } from '@angular/material/core';
+import { MatNativeDateModule, MAT_DATE_LOCALE } from '@angular/material/core';
 import { MatCardModule } from '@angular/material/card';
 import { MatDialogModule } from '@angular/material/dialog';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 
 const MODULES = [
   NgApexchartsModule,
@@ -41,10 +42,12 @@ const MODULES = [
   MatNativeDateModule,
   MatCardModule,
   MatDialogModule,
+  MatAutocompleteModule,
 ];
 
 @NgModule({
   imports: [...MODULES],
   exports: [...MODULES],
+  providers: [{ provide: MAT_DATE_LOCALE, useValue: 'hu-HU' }],
 })
 export class MaterialModule {}
