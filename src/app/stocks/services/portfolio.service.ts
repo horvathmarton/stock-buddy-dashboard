@@ -35,7 +35,10 @@ export class PortfolioService {
       .subscribe();
   }
 
-  public summary(id = 'summary', asOf: Date = new Date()): void {
+  public summary(
+    id: string | number = 'summary',
+    asOf: Date = new Date()
+  ): void {
     this.store.setLoading(true);
 
     this.http
@@ -60,5 +63,47 @@ export class PortfolioService {
         finalize(() => this.store.setLoading(false))
       )
       .subscribe();
+  }
+
+  public create(portfolio: StockPortfolio): void {
+    this.store.setLoading(true);
+
+    this.http
+      .post<StockPortfolio>(`/stocks/portfolios`, portfolio)
+      .pipe(
+        tap((portfolio) => this.store.add(portfolio)),
+        catchError((errorResponse: ErrorResponse) => {
+          this.store.setError(errorResponse.error);
+
+          return EMPTY;
+        }),
+        finalize(() => this.store.setLoading(false))
+      )
+      .subscribe();
+  }
+
+  public update(portfolio: StockPortfolio): void {
+    this.store.setLoading(true);
+
+    /* eslint-disable @typescript-eslint/no-non-null-assertion */
+    this.http
+      .put<StockPortfolio>(`/stocks/portfolios/${portfolio.id!}`, portfolio)
+      .pipe(
+        tap(
+          (updatedPortfolio) =>
+            void this.store.update(
+              updatedPortfolio.id!.toString(),
+              updatedPortfolio
+            )
+        ),
+        catchError((errorResponse: ErrorResponse) => {
+          this.store.setError(errorResponse.error);
+
+          return EMPTY;
+        }),
+        finalize(() => this.store.setLoading(false))
+      )
+      .subscribe();
+    /* eslint-enable */
   }
 }

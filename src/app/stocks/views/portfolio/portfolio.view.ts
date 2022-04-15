@@ -1,15 +1,26 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { format } from 'date-fns';
 import { Observable, Subject } from 'rxjs';
-import { filter, switchMap, take, takeUntil, tap } from 'rxjs/operators';
+import {
+  filter,
+  map,
+  switchMap,
+  take,
+  takeUntil,
+  tap,
+  withLatestFrom,
+} from 'rxjs/operators';
 import { isDefined } from 'src/app/shared/utils';
+import { StockPortfolioDialogComponent } from '../../components';
+import { StockPortfolio } from '../../interfaces';
 import { StockPosition } from '../../interfaces/stock-positions.interface';
 import { PortfolioService } from '../../services';
 import { StockPortfolioQuery } from '../../state';
 
-type PageControlValues = { portfolio: string; as_of: Date };
+type PageControlValues = { portfolio: StockPortfolio; as_of: Date };
 
 @Component({
   templateUrl: './portfolio.view.html',
@@ -18,11 +29,23 @@ type PageControlValues = { portfolio: string; as_of: Date };
 export class PortfolioSummaryViewComponent implements OnInit, OnDestroy {
   private readonly onDestroy = new Subject<boolean>();
 
+  private readonly STOCK_PORTFOLIO_DIALOG_CONFIG = {
+    minHeight: '300px',
+    minWidth: '400px',
+    width: '60vw',
+    maxWidth: '700px',
+  };
+
+  public readonly SUMMARY_VALUE = {
+    name: 'Summary',
+    id: 'summary',
+  } as unknown as StockPortfolio;
+
   public readonly isLoading = this.query.selectLoading();
   public readonly error = this.query.selectError();
   public readonly controls = this.builder.group({
     /* eslint-disable @typescript-eslint/unbound-method */
-    portfolio: ['summary', Validators.required],
+    portfolio: [this.SUMMARY_VALUE, Validators.required],
     asOf: [new Date(), Validators.required],
     /* eslint-enable */
   });
@@ -38,6 +61,7 @@ export class PortfolioSummaryViewComponent implements OnInit, OnDestroy {
   public annualizedPnl!: Record<string, number>;
 
   constructor(
+    private readonly dialog: MatDialog,
     private readonly stockPortfolioService: PortfolioService,
     private readonly builder: FormBuilder,
     private readonly router: Router,
@@ -51,6 +75,41 @@ export class PortfolioSummaryViewComponent implements OnInit, OnDestroy {
     this.handleControlChanges();
     this.handleSummaryChanges();
     this.initializeControls();
+  }
+
+  public createPortfolio(): void {
+    this.dialog
+      .open(StockPortfolioDialogComponent, this.STOCK_PORTFOLIO_DIALOG_CONFIG)
+      .afterClosed()
+      .pipe(
+        filter((result) => !!result),
+        tap((portfolio: StockPortfolio) =>
+          this.stockPortfolioService.create(portfolio)
+        )
+      )
+      .subscribe();
+  }
+
+  public editPortfolio(id: number, event: Event): void {
+    event.stopImmediatePropagation();
+
+    this.query.portfolios
+      .pipe(
+        switchMap((portfolios) =>
+          this.dialog
+            .open(StockPortfolioDialogComponent, {
+              ...this.STOCK_PORTFOLIO_DIALOG_CONFIG,
+              data: portfolios.find((p) => p.id === id),
+            })
+            .afterClosed()
+        ),
+        filter((result) => !!result),
+        tap((portfolio: StockPortfolio) =>
+          this.stockPortfolioService.update(portfolio)
+        ),
+        take(1)
+      )
+      .subscribe();
   }
 
   private extractProperty(
@@ -95,13 +154,22 @@ export class PortfolioSummaryViewComponent implements OnInit, OnDestroy {
   private handleControlChanges(): void {
     this.controls.valueChanges
       .pipe(
+        /* eslint-disable @typescript-eslint/no-unsafe-assignment */
+        map(({ portfolio, asOf }) => ({
+          portfolio,
+          as_of: asOf,
+        })),
+        /* eslint-enable */
         tap(({ portfolio, as_of }: PageControlValues) =>
-          this.stockPortfolioService.summary(portfolio, as_of)
+          this.stockPortfolioService.summary(portfolio.id, as_of)
         ),
         tap(({ portfolio, as_of }: PageControlValues) => {
           void this.router.navigate([], {
             relativeTo: this.route,
-            queryParams: { portfolio, as_of: format(as_of, 'yyyy-MM-dd') },
+            queryParams: {
+              portfolio: portfolio.id,
+              as_of: format(as_of, 'yyyy-MM-dd'),
+            },
             queryParamsHandling: 'merge',
           });
         }),
@@ -113,11 +181,14 @@ export class PortfolioSummaryViewComponent implements OnInit, OnDestroy {
   private initializeControls(): void {
     this.query.portfolios
       .pipe(
-        filter((portfolios) => !!portfolios),
-        switchMap(
-          () => this.route.queryParams as Observable<PageControlValues>
+        filter((portfolios) => !!portfolios && portfolios.length !== 0),
+        withLatestFrom(
+          this.route.queryParams as Observable<{
+            portfolio: string;
+            as_of: Date;
+          }>
         ),
-        tap((queryParams) => {
+        tap(([portfolios, queryParams]) => {
           if (queryParams.as_of) {
             queryParams = {
               ...queryParams,
@@ -125,15 +196,13 @@ export class PortfolioSummaryViewComponent implements OnInit, OnDestroy {
             };
           }
 
-          const portfolio = Number.parseInt(queryParams.portfolio);
-          queryParams = {
-            ...queryParams,
-            portfolio: !Number.isNaN(portfolio)
-              ? portfolio.toString()
-              : 'summary',
-          };
+          const portfolioId = Number.parseInt(queryParams.portfolio);
+          const portfolio = portfolios.find((p) => p.id === portfolioId);
 
-          this.controls.patchValue(queryParams);
+          this.controls.patchValue({
+            ...queryParams,
+            portfolio: portfolio ?? this.SUMMARY_VALUE,
+          });
         }),
         take(1)
       )

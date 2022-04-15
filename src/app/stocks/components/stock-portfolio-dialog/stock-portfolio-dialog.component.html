@@ -1,0 +1,26 @@
+<h1 mat-dialog-title>Create stock portfolio</h1>
+<div mat-dialog-content>
+  <form [formGroup]="form">
+    <mat-form-field appearance="outline" class="form-field">
+      <mat-label>Name</mat-label>
+      <input matInput formControlName="name" />
+      <mat-error *ngIf="form.get('name')?.invalid">{{
+        getErrorMessage(form.get("name"))
+      }}</mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="form-field">
+      <mat-label>Description</mat-label>
+      <textarea matInput formControlName="description"></textarea>
+      <mat-error *ngIf="form.get('description')?.invalid">{{
+        getErrorMessage(form.get("description"))
+      }}</mat-error>
+    </mat-form-field>
+  </form>
+</div>
+<div mat-dialog-actions class="actions">
+  <button mat-button [mat-dialog-close]="">Cancel</button>
+  <button mat-button (click)="save()" color="primary" cdkFocusInitial>
+    Save
+  </button>
+</div>

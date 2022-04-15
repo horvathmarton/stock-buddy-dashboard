@@ -18,6 +18,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatCardModule } from '@angular/material/card';
+import { MatDialogModule } from '@angular/material/dialog';
 
 const MODULES = [
   NgApexchartsModule,
@@ -39,6 +40,7 @@ const MODULES = [
   MatDatepickerModule,
   MatNativeDateModule,
   MatCardModule,
+  MatDialogModule,
 ];
 
 @NgModule({

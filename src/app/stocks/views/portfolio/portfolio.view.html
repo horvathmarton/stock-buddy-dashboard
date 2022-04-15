@@ -7,23 +7,42 @@
     class="control-form"
   >
     <mat-form-field appearance="outline" class="control-field">
-      <mat-label>Portfolio</mat-label>
-      <mat-select formControlName="portfolio">
-        <mat-option value="summary">Summary</mat-option>
-        <mat-option
-          *ngFor="let portfolio of (query.portfolios | async)"
-          [value]="portfolio.id"
-          >{{ portfolio.name }}</mat-option
-        >
-      </mat-select>
-    </mat-form-field>
-
-    <mat-form-field appearance="outline" class="control-field">
       <mat-label>As of</mat-label>
       <input matInput [matDatepicker]="picker" formControlName="asOf" />
       <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
       <mat-datepicker #picker></mat-datepicker>
     </mat-form-field>
+
+    <mat-form-field appearance="outline" class="control-field">
+      <mat-label>Portfolio</mat-label>
+      <mat-select formControlName="portfolio" #select>
+        <mat-select-trigger> {{ select.value.name }} </mat-select-trigger>
+
+        <mat-option [value]="SUMMARY_VALUE">Summary</mat-option>
+        <mat-option
+          *ngFor="let portfolio of (query.portfolios | async)"
+          [value]="portfolio"
+          class="option"
+        >
+          {{ portfolio.name }}
+          <button
+            (click)="editPortfolio(portfolio.id!, $event)"
+            mat-icon-button
+          >
+            <mat-icon>edit</mat-icon>
+          </button>
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <button
+      (click)="createPortfolio()"
+      mat-fab
+      color="primary"
+      class="add-button"
+    >
+      <mat-icon>add</mat-icon>
+    </button>
   </form>
 </div>
 

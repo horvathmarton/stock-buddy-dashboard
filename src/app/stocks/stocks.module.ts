@@ -7,6 +7,7 @@ import {
   BasicStockDataTable,
   StockDividendTableComponent,
   StockPnlTableComponent,
+  StockPortfolioDialogComponent,
   StockRiskTable,
 } from './components';
 import { StocksRoutingModule } from './stocks-routing.module';
@@ -18,6 +19,7 @@ const COMPONENTS = [
   StockRiskTable,
   StockDividendTableComponent,
   StockPnlTableComponent,
+  StockPortfolioDialogComponent,
 ];
 
 @NgModule({

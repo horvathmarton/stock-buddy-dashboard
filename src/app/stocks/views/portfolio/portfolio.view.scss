@@ -10,6 +10,10 @@
     .control-field {
       margin-left: calc($margin-size / 2);
     }
+
+    .add-button {
+      margin-left: calc($margin-size / 2);
+    }
   }
 }
 
@@ -83,4 +87,9 @@
 .no-data {
   display: block;
   margin: 0 $margin-size;
+}
+
+::ng-deep span.mat-option-text {
+  display: flex;
+  justify-content: space-between;
 }
