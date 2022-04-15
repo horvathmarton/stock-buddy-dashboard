@@ -7,6 +7,7 @@ import {
 } from '@angular/core';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { Subject } from 'rxjs';
 
 @Component({
   selector: 'sb-basic-stock-data-table',
@@ -23,12 +24,16 @@ export class BasicStockDataTable implements OnInit, AfterViewInit {
     'shares',
     'first_purchase_date',
     'latest_purchase_date',
+    'controls',
   ];
 
   public dataSource!: MatTableDataSource<unknown>;
 
   @Input()
   public positions!: unknown[];
+
+  @Input()
+  public createTransaction!: Subject<string | null>;
 
   @ViewChild(MatSort)
   public sort!: MatSort;
@@ -39,5 +44,11 @@ export class BasicStockDataTable implements OnInit, AfterViewInit {
 
   public ngAfterViewInit(): void {
     this.dataSource.sort = this.sort;
+  }
+
+  public addToPosition(ticker: string | null, event: Event): void {
+    event.stopImmediatePropagation();
+
+    this.createTransaction.next(ticker);
   }
 }
