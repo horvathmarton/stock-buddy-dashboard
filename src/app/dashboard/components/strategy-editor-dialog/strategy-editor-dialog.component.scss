@@ -1,0 +1,23 @@
+
+.content {
+  display: flex;
+  justify-content: space-between;
+
+  .form {
+    width: 50%;
+  
+    .form-field {
+      display: block;
+    }
+    
+    .strategy-item {
+      width: 100%;
+      display: flex;
+    }
+  }
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+}

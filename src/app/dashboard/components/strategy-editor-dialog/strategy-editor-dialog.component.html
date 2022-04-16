@@ -1,0 +1,60 @@
+<h1 mat-dialog-title>Create asset allocation strategy</h1>
+<div mat-dialog-content class="content">
+  <form [formGroup]="form" class="form">
+    <mat-form-field appearance="outline" class="form-field">
+      <mat-label>Name</mat-label>
+      <input matInput formControlName="name" />
+      <mat-error *ngIf="form.get('name')?.invalid">{{
+        getErrorMessage(form.get("name"))
+      }}</mat-error>
+    </mat-form-field>
+
+    <div
+      *ngFor="let item of strategyItems.controls; let i = index"
+      class="strategy-item"
+    >
+      <mat-form-field appearance="outline" class="form-field">
+        <mat-label>Name</mat-label>
+        <mat-select matInput [formControl]="getStrategyItemControls(i).name">
+          <mat-option
+            *ngFor="let assetType of ASSET_TYPES"
+            [value]="assetType.value"
+            >{{ assetType.name }}</mat-option
+          >
+        </mat-select>
+        <mat-error *ngIf="form.get('name')?.invalid">{{
+          getErrorMessage(form.get("name"))
+        }}</mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="form-field">
+        <mat-label>Size</mat-label>
+        <input
+          matInput
+          [formControl]="getStrategyItemControls(i).size"
+          type="number"
+        />
+        <span matSuffix>%</span>
+        <mat-error *ngIf="form.get('size')?.invalid">{{
+          getErrorMessage(form.get("size"))
+        }}</mat-error>
+      </mat-form-field>
+    </div>
+
+    <button mat-fab (click)="addStrategyItem()" color="primary">
+      <mat-icon>add</mat-icon>
+    </button>
+  </form>
+
+  <sb-pie-chart
+    [data]="{ stock: 1 }"
+    [height]="200"
+    [width]="200"
+  ></sb-pie-chart>
+</div>
+<div mat-dialog-actions class="actions">
+  <button mat-button [mat-dialog-close]="">Cancel</button>
+  <button mat-button (click)="save()" color="primary" cdkFocusInitial>
+    Save
+  </button>
+</div>

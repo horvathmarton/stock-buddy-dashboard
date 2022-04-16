@@ -27,6 +27,9 @@
       title="Target strategy"
       [data]="targetStrategy"
     ></sb-pie-chart>
+    <button mat-fab (click)="createStrategy($event)" color="primary">
+      <mat-icon>add</mat-icon>
+    </button>
   </div>
 
   <div class="kpi-container">
