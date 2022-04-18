@@ -2,7 +2,6 @@
 
 .content-container {
   display: flex;
-  height: 100%;
 }
 
 .error-message,
@@ -13,18 +12,9 @@
   text-align: center;
 }
 
-.chart-container,
-.kpi-container {
-  max-width: 50%;
-  flex-grow: 1;
-  vertical-align: middle;
-}
-
 .chart-container {
-  min-width: 800px;
-  height: 100%;
   display: flex;
-  justify-content: center;
+  margin-left: $margin-size;
 
   .strategy-controls {
     display: flex;
@@ -37,12 +27,14 @@
 }
 
 .kpi-container {
+  width: 100%;
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding-right: calc($margin-size * 4);
+  flex-wrap: wrap;
+  align-content: flex-start;
+  justify-content: center;
 
   .kpi {
-    margin-bottom: $margin-size;
+    width: 400px;
+    margin: 0 $margin-size $margin-size 0;
   }
 }

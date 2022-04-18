@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { MaterialModule } from '../core/material.module';
 import {
@@ -5,6 +6,7 @@ import {
   ContentHeaderComponent,
   ErrorMessageComponent,
   PieChartComponent,
+  ToggleableComponent,
   TreemapChartComponent,
 } from './components';
 
@@ -14,10 +16,11 @@ const COMPONENTS = [
   BarChartComponent,
   PieChartComponent,
   TreemapChartComponent,
+  ToggleableComponent,
 ];
 
 @NgModule({
-  imports: [MaterialModule],
+  imports: [MaterialModule, CommonModule],
   declarations: [...COMPONENTS],
   exports: [...COMPONENTS],
 })

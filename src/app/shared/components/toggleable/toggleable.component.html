@@ -1,0 +1,17 @@
+<div class="toggle">
+  <span>{{ mainLabel }}</span>
+  <mat-slide-toggle
+    (change)="toggled = !toggled"
+    color="primary"
+    class="toggle-button"
+  ></mat-slide-toggle>
+  <span>{{ altLabel }}</span>
+</div>
+
+<div *ngIf="!toggled">
+  <ng-content select="[mainContent]"></ng-content>
+</div>
+
+<div *ngIf="toggled">
+  <ng-content select="[altContent]"></ng-content>
+</div>

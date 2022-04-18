@@ -30,42 +30,58 @@
   </ng-container>
 
   <ng-container matColumnDef="price">
-    <mat-header-cell *matHeaderCellDef mat-sort-header>Price</mat-header-cell>
-    <mat-cell *matCellDef="let row">
+    <mat-header-cell
+      *matHeaderCellDef
+      mat-sort-header
+      class="wide-cell center-align"
+      >Price</mat-header-cell
+    >
+    <mat-cell *matCellDef="let row" class="wide-cell center-align">
       {{ row.price | currency }}
     </mat-cell>
   </ng-container>
 
   <ng-container matColumnDef="purchase_price">
-    <mat-header-cell *matHeaderCellDef mat-sort-header class="wide-cell"
+    <mat-header-cell
+      *matHeaderCellDef
+      mat-sort-header
+      class="wide-cell center-align"
       >Avg. purchase price</mat-header-cell
     >
-    <mat-cell *matCellDef="let row" class="wide-cell">
+    <mat-cell *matCellDef="let row" class="wide-cell center-align">
       {{ row.purchase_price | currency }}
     </mat-cell>
   </ng-container>
 
   <ng-container matColumnDef="shares">
-    <mat-header-cell *matHeaderCellDef mat-sort-header>Shares</mat-header-cell>
-    <mat-cell *matCellDef="let row">
+    <mat-header-cell *matHeaderCellDef mat-sort-header class="center-align"
+      >Shares</mat-header-cell
+    >
+    <mat-cell *matCellDef="let row" class="center-align">
       {{ row.shares }}
     </mat-cell>
   </ng-container>
 
   <ng-container matColumnDef="first_purchase_date">
-    <mat-header-cell *matHeaderCellDef mat-sort-header class="wide-cell"
+    <mat-header-cell
+      *matHeaderCellDef
+      mat-sort-header
+      class="wide-cell center-align"
       >First purchase</mat-header-cell
     >
-    <mat-cell *matCellDef="let row" class="wide-cell">
+    <mat-cell *matCellDef="let row" class="wide-cell center-align">
       {{ row.first_purchase_date | date }}
     </mat-cell>
   </ng-container>
 
   <ng-container matColumnDef="latest_purchase_date">
-    <mat-header-cell *matHeaderCellDef mat-sort-header class="wide-cell"
+    <mat-header-cell
+      *matHeaderCellDef
+      mat-sort-header
+      class="wide-cell center-align"
       >Latest purchase</mat-header-cell
     >
-    <mat-cell *matCellDef="let row" class="wide-cell">
+    <mat-cell *matCellDef="let row" class="wide-cell center-align">
       {{ row.latest_purchase_date | date }}
     </mat-cell>
   </ng-container>
