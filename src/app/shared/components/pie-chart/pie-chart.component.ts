@@ -3,6 +3,7 @@ import {
   Component,
   Input,
   OnInit,
+  SimpleChanges,
   ViewChild,
 } from '@angular/core';
 import { ApexOptions, ChartComponent } from 'ng-apexcharts';
@@ -20,9 +21,24 @@ export class PieChartComponent implements OnInit, AfterViewInit {
       toolbar: {
         show: false,
       },
+      selection: {
+        enabled: false,
+      },
     },
     legend: {
       show: false,
+    },
+    states: {
+      active: {
+        filter: {
+          type: 'none',
+        },
+      },
+    },
+    plotOptions: {
+      pie: {
+        expandOnClick: false,
+      },
     },
   };
 
@@ -38,13 +54,22 @@ export class PieChartComponent implements OnInit, AfterViewInit {
   @Input()
   public data!: Record<string, number>;
 
-  @ViewChild('chart')
+  @Input()
+  public animate = true;
+
+  @Input()
+  public live = false;
+
+  @ViewChild('chart', { static: true })
   public chart!: ChartComponent;
 
   public ngOnInit(): void {
     /* eslint-disable @typescript-eslint/no-non-null-assertion */
     this.chartOptions.chart!.height = this.height;
     this.chartOptions.chart!.width = this.width;
+    this.chartOptions.chart!.animations = {
+      enabled: this.animate,
+    };
     /* eslint-enable */
 
     this.chartOptions.title = {
@@ -54,14 +79,33 @@ export class PieChartComponent implements OnInit, AfterViewInit {
   }
 
   public ngAfterViewInit(): void {
-    const transformedData = Object.entries(this.data)
-      .map(([key, value]) => ({ x: key, y: value }))
-      .sort((a, b) => a.y - b.y);
-
-    const labels = transformedData.map((a) => a.x);
-    const series = transformedData.map((a) => a.y);
+    const { labels, series } = this.transformData(this.data);
 
     this.chart.series = series;
     this.chart.labels = labels;
+  }
+
+  public ngOnChanges(changes: SimpleChanges): void {
+    if (this.live && changes?.data?.currentValue) {
+      const { series } = this.transformData(
+        changes.data.currentValue as Record<string, number>
+      );
+
+      this.chartOptions.series = series;
+    }
+  }
+
+  private transformData(data: Record<string, number>): {
+    labels: string[];
+    series: number[];
+  } {
+    const transformedData = Object.entries(data)
+      .map(([key, value]) => ({ x: key, y: value }))
+      .sort((a, b) => a.y - b.y);
+
+    return {
+      labels: transformedData.map((a) => a.x),
+      series: transformedData.map((a) => a.y),
+    };
   }
 }

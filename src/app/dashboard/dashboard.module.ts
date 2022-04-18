@@ -3,12 +3,20 @@ import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MaterialModule } from '../core/material.module';
 import { SharedModule } from '../shared/shared.module';
-import { KpiComponent, StrategyEditorDialogComponent } from './components';
+import {
+  KpiComponent,
+  StrategyEditorDialogComponent,
+  StrategySelectorDialogComponent,
+} from './components';
 import { DashboardRoutingModule } from './dashboard-routing.module';
 import { DashboardViewComponent } from './views';
 
 const VIEWS = [DashboardViewComponent];
-const COMPONENTS = [KpiComponent, StrategyEditorDialogComponent];
+const COMPONENTS = [
+  KpiComponent,
+  StrategyEditorDialogComponent,
+  StrategySelectorDialogComponent,
+];
 
 @NgModule({
   imports: [

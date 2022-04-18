@@ -25,6 +25,15 @@
   height: 100%;
   display: flex;
   justify-content: center;
+
+  .strategy-controls {
+    display: flex;
+    flex-direction: column;
+
+    .strategy-control {
+      margin-bottom: calc($margin-size / 4);
+    }
+  }
 }
 
 .kpi-container {

@@ -1,0 +1,27 @@
+<h1 mat-dialog-title>Select target asset allocation strategy</h1>
+<div mat-dialog-content>
+  <mat-spinner
+    *ngIf="isLoading | async"
+    [diameter]="50"
+    class="spinner"
+  ></mat-spinner>
+
+  <sb-error-message *ngIf="error | async" class="error-message">
+    An error occurred while listing strategies.
+  </sb-error-message>
+
+  <div *ngIf="!(isLoading | async)" class="strategies-container">
+    <sb-pie-chart
+      *ngFor="let strategy of strategies | async"
+      (click)="save(strategy)"
+      [data]="transformItems(strategy.items)"
+      [title]="strategy.name"
+      [height]="200"
+      [width]="200"
+      [animate]="false"
+    ></sb-pie-chart>
+  </div>
+</div>
+<div mat-dialog-actions class="actions">
+  <button mat-button [mat-dialog-close]="">Cancel</button>
+</div>
