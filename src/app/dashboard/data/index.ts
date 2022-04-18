@@ -1,5 +1,9 @@
 export const ASSET_TYPES: { name: string; value: string }[] = [
   {
+    name: 'Cash',
+    value: 'cash',
+  },
+  {
     name: 'Stocks',
     value: 'stock',
   },
@@ -22,9 +26,5 @@ export const ASSET_TYPES: { name: string; value: string }[] = [
   {
     name: 'Commodities',
     value: 'commodity',
-  },
-  {
-    name: 'Cash',
-    value: 'cash',
   },
 ];

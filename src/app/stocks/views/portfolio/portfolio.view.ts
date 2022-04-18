@@ -13,7 +13,6 @@ import {
   tap,
   withLatestFrom,
 } from 'rxjs/operators';
-import { DIALOG_BASE_CONFIG } from 'src/app/shared/data';
 import { isDefined } from 'src/app/shared/utils';
 import {
   StockPortfolioDialogComponent,
@@ -35,6 +34,13 @@ type PageControlValues = { portfolio: StockPortfolio; as_of: Date };
 })
 export class PortfolioSummaryViewComponent implements OnInit, OnDestroy {
   private readonly onDestroy = new Subject<boolean>();
+
+  private readonly DIALOG_BASE_CONFIG = {
+    minHeight: '300px',
+    minWidth: '400px',
+    width: '60vw',
+    maxWidth: '700px',
+  };
 
   public readonly SUMMARY_VALUE = {
     name: 'Summary',
@@ -82,7 +88,7 @@ export class PortfolioSummaryViewComponent implements OnInit, OnDestroy {
 
   public createPortfolio(): void {
     this.dialog
-      .open(StockPortfolioDialogComponent, DIALOG_BASE_CONFIG)
+      .open(StockPortfolioDialogComponent, this.DIALOG_BASE_CONFIG)
       .afterClosed()
       .pipe(
         filter((result) => !!result),
@@ -101,7 +107,7 @@ export class PortfolioSummaryViewComponent implements OnInit, OnDestroy {
         switchMap((portfolios) =>
           this.dialog
             .open(StockPortfolioDialogComponent, {
-              ...DIALOG_BASE_CONFIG,
+              ...this.DIALOG_BASE_CONFIG,
               data: portfolios.find((p) => p.id === id),
             })
             .afterClosed()
@@ -230,7 +236,7 @@ export class PortfolioSummaryViewComponent implements OnInit, OnDestroy {
         switchMap((ticker) => {
           return this.dialog
             .open(StockTransactionDialogComponent, {
-              ...DIALOG_BASE_CONFIG,
+              ...this.DIALOG_BASE_CONFIG,
               data: { ticker },
             })
             .afterClosed();

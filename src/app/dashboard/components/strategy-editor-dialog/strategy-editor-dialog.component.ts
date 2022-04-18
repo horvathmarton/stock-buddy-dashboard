@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
   AbstractControl,
   FormArray,
@@ -8,21 +8,23 @@ import {
   Validators,
 } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
-import { integerValidator } from 'src/app/shared/validators';
+import { Subject } from 'rxjs';
+import { integerValidator, uniqueItem } from 'src/app/shared/validators';
 import { ASSET_TYPES } from '../../data';
+import { strategySum } from '../../validators';
 
 @Component({
   templateUrl: './strategy-editor-dialog.component.html',
   styleUrls: ['./strategy-editor-dialog.component.scss'],
 })
-export class StrategyEditorDialogComponent implements OnInit {
+export class StrategyEditorDialogComponent implements OnInit, OnDestroy {
+  private readonly onDestroy = new Subject<boolean>();
+
   public readonly ASSET_TYPES = ASSET_TYPES;
   public readonly form = this.builder.group({
     /* eslint-disable @typescript-eslint/unbound-method */
     name: [null, Validators.required],
-    // TODO: Add validator to not allow duplicates.
-    // TODO: Add validator to enforce adding up to 100% or pad to 100% with cash.
-    items: this.builder.array([]),
+    items: this.builder.array([], [uniqueItem(), strategySum()]),
     /* eslint-enable */
   });
 
@@ -36,7 +38,7 @@ export class StrategyEditorDialogComponent implements OnInit {
   ) {}
 
   public ngOnInit(): void {
-    this.addStrategyItem();
+    this.addStrategyItem(ASSET_TYPES[0].value, 100);
   }
 
   public save(): void {
@@ -46,18 +48,35 @@ export class StrategyEditorDialogComponent implements OnInit {
       return;
     }
 
-    this.dialogRef.close(this.form.value);
+    const items = (
+      this.strategyItems.value as { name: string; size: number }[]
+    ).map((item) => ({
+      name: item.name,
+      size: item.size / 100,
+    }));
+
+    this.dialogRef.close({
+      ...this.form.value,
+      items,
+    });
   }
 
-  public addStrategyItem(): void {
+  public addStrategyItem(name?: string, size?: number): void {
     /* eslint-disable @typescript-eslint/unbound-method */
     this.strategyItems.push(
       this.builder.group({
-        name: [null, Validators.required],
-        size: [null, [Validators.required, integerValidator()]],
+        name: [name ?? null, Validators.required],
+        size: [
+          size ?? null,
+          [Validators.required, Validators.min(0), integerValidator()],
+        ],
       })
     );
     /* eslint-enable */
+  }
+
+  public removeStrategyItem(index: number): void {
+    this.strategyItems.removeAt(index);
   }
 
   public getErrorMessage(control: AbstractControl | null): string {
@@ -65,6 +84,14 @@ export class StrategyEditorDialogComponent implements OnInit {
 
     if (control.hasError('required')) {
       return 'This field is required.';
+    }
+
+    if (control.hasError('nonUniqueItems')) {
+      return 'Strategy items must be unique.';
+    }
+
+    if (control.hasError('strategySum')) {
+      return 'Strategy sizes must be add up to exactly 100%.';
     }
 
     return 'Unknown error.';
@@ -78,5 +105,10 @@ export class StrategyEditorDialogComponent implements OnInit {
       name: FormControl;
       size: FormControl;
     };
+  }
+
+  public ngOnDestroy(): void {
+    this.onDestroy.next(true);
+    this.onDestroy.complete();
   }
 }
