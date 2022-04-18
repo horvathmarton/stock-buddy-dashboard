@@ -17,6 +17,27 @@
       >Please select a target strategy.</span
     >
 
+    <div
+      *ngIf="!(strategyError | async) && targetStrategy"
+      class="strategy-controls"
+    >
+      <button
+        mat-fab
+        (click)="createStrategy($event)"
+        color="primary"
+        class="strategy-control"
+      >
+        <mat-icon>add</mat-icon>
+      </button>
+      <button
+        mat-fab
+        (click)="selectStrategy($event)"
+        color="primary"
+        class="strategy-control"
+      >
+        <mat-icon>list</mat-icon>
+      </button>
+    </div>
     <sb-pie-chart
       *ngIf="!(strategyError | async) && currentStrategy"
       title="Current strategy"
@@ -30,10 +51,8 @@
       [data]="targetStrategy"
       [width]="350"
       [height]="350"
+      [live]="true"
     ></sb-pie-chart>
-    <button mat-fab (click)="createStrategy($event)" color="primary">
-      <mat-icon>add</mat-icon>
-    </button>
   </div>
 
   <div class="kpi-container">

@@ -1,9 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { combineLatest } from 'rxjs';
-import { filter, map, take, tap } from 'rxjs/operators';
+import { filter, map, tap } from 'rxjs/operators';
 import { isDefined } from 'src/app/shared/utils';
-import { StrategyEditorDialogComponent } from '../../components';
+import {
+  StrategyEditorDialogComponent,
+  StrategySelectorDialogComponent,
+} from '../../components';
 import { Strategy } from '../../interfaces';
 import { PortfolioIndicatorsService, StrategiesService } from '../../services';
 import { PortfolioIndicatorsQuery, StrategiesQuery } from '../../state';
@@ -14,7 +17,6 @@ import { PortfolioIndicatorsQuery, StrategiesQuery } from '../../state';
 })
 export class DashboardViewComponent implements OnInit {
   private readonly DIALOG_BASE_CONFIG = {
-    minHeight: '350px',
     minWidth: '400px',
     width: '70vw',
     maxWidth: '800px',
@@ -51,8 +53,7 @@ export class DashboardViewComponent implements OnInit {
         tap((strategy) => {
           this.currentStrategy = this.transformStrategyItems(strategy.current);
           this.targetStrategy = this.transformStrategyItems(strategy.target);
-        }),
-        take(1)
+        })
       )
       .subscribe();
   }
@@ -66,6 +67,19 @@ export class DashboardViewComponent implements OnInit {
       .pipe(
         filter((result) => !!result),
         tap((strategy: Strategy) => this.dashboardService.create(strategy))
+      )
+      .subscribe();
+  }
+
+  public selectStrategy(event: Event): void {
+    event.stopImmediatePropagation();
+
+    this.dialog
+      .open(StrategySelectorDialogComponent, this.DIALOG_BASE_CONFIG)
+      .afterClosed()
+      .pipe(
+        filter((result) => !!result),
+        tap((strategy: Strategy) => this.dashboardService.select(strategy))
       )
       .subscribe();
   }

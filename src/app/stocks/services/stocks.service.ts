@@ -1,8 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { EMPTY } from 'rxjs';
-import { catchError, finalize, switchMap, tap } from 'rxjs/operators';
-import { ErrorResponse } from 'src/app/shared/types';
+import { finalize, switchMap, tap } from 'rxjs/operators';
+import { defaultCatchError } from 'src/app/shared/operators';
 import { Stock, StockTransaction } from '../interfaces';
 import { StockPortfolioQuery, StockStore } from '../state';
 import { PortfolioService } from './portfolio.service';
@@ -27,11 +26,7 @@ export class StockService {
         tap((stocks) => {
           this.store.set(stocks);
         }),
-        catchError((errorResponse: ErrorResponse) => {
-          this.store.setError(errorResponse.error);
-
-          return EMPTY;
-        }),
+        defaultCatchError(this.store),
         finalize(() => this.store.setLoading(false))
       )
       .subscribe();
@@ -45,11 +40,7 @@ export class StockService {
       .pipe(
         switchMap(() => this.portfolioQuery.selectedPortfolio),
         tap((portfolio) => this.portfolioService.summary(portfolio?.id)),
-        catchError((errorResponse: ErrorResponse) => {
-          this.store.setError(errorResponse.error);
-
-          return EMPTY;
-        })
+        defaultCatchError(this.store)
       )
       .subscribe();
   }

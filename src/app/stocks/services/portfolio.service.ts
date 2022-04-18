@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { format } from 'date-fns';
 import { EMPTY } from 'rxjs';
 import { catchError, finalize, tap } from 'rxjs/operators';
+import { defaultCatchError } from 'src/app/shared/operators';
 import { ErrorResponse } from 'src/app/shared/types';
 import { StockPortfolio, StockPortfolioSummary } from '../interfaces';
 import { StockPortfolioStore } from '../state';
@@ -26,11 +27,7 @@ export class PortfolioService {
           this.store.set(portfolios);
           this.store.setLoading(true);
         }),
-        catchError((errorResponse: ErrorResponse) => {
-          this.store.setError(errorResponse.error);
-
-          return EMPTY;
-        })
+        defaultCatchError(this.store)
       )
       .subscribe();
   }
@@ -72,11 +69,7 @@ export class PortfolioService {
       .post<StockPortfolio>(`/stocks/portfolios`, portfolio)
       .pipe(
         tap((portfolio) => this.store.add(portfolio)),
-        catchError((errorResponse: ErrorResponse) => {
-          this.store.setError(errorResponse.error);
-
-          return EMPTY;
-        }),
+        defaultCatchError(this.store),
         finalize(() => this.store.setLoading(false))
       )
       .subscribe();
