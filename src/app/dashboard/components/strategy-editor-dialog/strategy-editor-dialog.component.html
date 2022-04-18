@@ -22,21 +22,22 @@
             >{{ assetType.name }}</mat-option
           >
         </mat-select>
-        <mat-error *ngIf="form.get('name')?.invalid">{{
-          getErrorMessage(form.get("name"))
+        <mat-error *ngIf="getStrategyItemControls(i).name?.invalid">{{
+          getErrorMessage(getStrategyItemControls(i).name)
         }}</mat-error>
       </mat-form-field>
 
-      <mat-form-field appearance="outline" class="form-field">
+      <mat-form-field appearance="outline" class="form-field size">
         <mat-label>Size</mat-label>
         <input
           matInput
           [formControl]="getStrategyItemControls(i).size"
+          autocomplete="off"
           type="number"
         />
-        <span matSuffix>%</span>
-        <mat-error *ngIf="form.get('size')?.invalid">{{
-          getErrorMessage(form.get("size"))
+        <mat-icon matSuffix>percent</mat-icon>
+        <mat-error *ngIf="getStrategyItemControls(i).size?.invalid">{{
+          getErrorMessage(getStrategyItemControls(i).size)
         }}</mat-error>
       </mat-form-field>
 
@@ -45,7 +46,7 @@
         *ngIf="i !== 0"
         (click)="removeStrategyItem(i)"
         color="warn"
-        cdkFocusInitial
+        class="delete-button"
       >
         <mat-icon>delete</mat-icon>
       </button>
@@ -59,7 +60,12 @@
       >{{ getErrorMessage(form.get("items")) }}</mat-error
     >
 
-    <button mat-mini-fab (click)="addStrategyItem()" color="primary">
+    <button
+      mat-mini-fab
+      (click)="addStrategyItem()"
+      color="primary"
+      class="add-button"
+    >
       <mat-icon>add</mat-icon>
     </button>
   </form>

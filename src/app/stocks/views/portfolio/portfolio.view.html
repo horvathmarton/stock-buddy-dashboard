@@ -84,52 +84,60 @@
   </mat-tab>
 
   <mat-tab label="Dividend">
-    <div class="tab dividend">
+    <div class="tab">
       <sb-stock-dividend-table
         [dividendData]="basicData"
         class="table"
       ></sb-stock-dividend-table>
-      <sb-bar-chart
-        title="Dividend yield"
-        [data]="dividendYield"
-        [filterZeroes]="true"
-        class="yield"
-      ></sb-bar-chart>
-      <sb-bar-chart
-        title="Dividend yield on cost"
-        [data]="yieldOnCost"
-        [filterZeroes]="true"
-        class="dividend"
-      ></sb-bar-chart>
-      <sb-pie-chart
-        title="Dividend income distribution"
-        [data]="dividendIncome"
-        class="income"
-      ></sb-pie-chart>
+      <div class="charts">
+        <sb-pie-chart
+          title="Dividend income distribution"
+          [data]="dividendIncome"
+          class="chart"
+        ></sb-pie-chart>
+        <sb-toggleable mainLabel="yield" altLabel="yield on cost" class="chart">
+          <sb-bar-chart
+            title="Dividend yield"
+            [data]="dividendYield"
+            [filterZeroes]="true"
+            mainContent
+          ></sb-bar-chart>
+          <sb-bar-chart
+            title="Dividend yield on cost"
+            [data]="yieldOnCost"
+            [filterZeroes]="true"
+            altContent
+          ></sb-bar-chart>
+        </sb-toggleable>
+      </div>
     </div>
   </mat-tab>
 
   <mat-tab label="Risk">
-    <div class="tab risk">
+    <div class="tab">
       <sb-stock-risk-table
         [riskData]="basicData"
         class="table"
       ></sb-stock-risk-table>
-      <sb-pie-chart
-        title="Sector distribution"
-        [data]="sectorDistribution"
-        class="sector"
-      ></sb-pie-chart>
-      <sb-treemap-chart
-        title="Size distribution"
-        [data]="sizeDistribution"
-        class="size"
-      ></sb-treemap-chart>
-      <sb-treemap-chart
-        title="Size distibution @ cost"
-        [data]="sizeDistributionAtCost"
-        class="size-at-cost"
-      ></sb-treemap-chart>
+      <div class="charts">
+        <sb-pie-chart
+          title="Sector distribution"
+          [data]="sectorDistribution"
+          class="chart"
+        ></sb-pie-chart>
+        <sb-toggleable mainLabel="size" altLabel="size at cost" class="chart">
+          <sb-treemap-chart
+            title="Size distribution"
+            [data]="sizeDistribution"
+            mainContent
+          ></sb-treemap-chart>
+          <sb-treemap-chart
+            title="Size distibution @ cost"
+            [data]="sizeDistributionAtCost"
+            altContent
+          ></sb-treemap-chart>
+        </sb-toggleable>
+      </div>
     </div>
   </mat-tab>
 
@@ -139,16 +147,26 @@
         [pnlData]="basicData"
         class="table"
       ></sb-stock-pnl-table>
-      <sb-bar-chart
-        title="Total return"
-        [data]="pnl"
-        class="return"
-      ></sb-bar-chart>
-      <sb-bar-chart
-        title="Annualized return"
-        [data]="annualizedPnl"
-        class="annualized"
-      ></sb-bar-chart>
+      <div class="charts">
+        <sb-toggleable
+          mainLabel="return"
+          altLabel="annualized return"
+          class="chart"
+        >
+          <sb-bar-chart
+            title="Total return"
+            [data]="pnl"
+            class="return"
+            mainContent
+          ></sb-bar-chart>
+          <sb-bar-chart
+            title="Annualized return"
+            [data]="annualizedPnl"
+            class="annualized"
+            altContent
+          ></sb-bar-chart>
+        </sb-toggleable>
+      </div>
     </div>
   </mat-tab>
 </mat-tab-group>

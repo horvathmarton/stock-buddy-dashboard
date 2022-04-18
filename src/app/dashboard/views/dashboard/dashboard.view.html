@@ -38,21 +38,23 @@
         <mat-icon>list</mat-icon>
       </button>
     </div>
-    <sb-pie-chart
-      *ngIf="!(strategyError | async) && currentStrategy"
-      title="Current strategy"
-      [data]="currentStrategy"
-      [width]="350"
-      [height]="350"
-    ></sb-pie-chart>
-    <sb-pie-chart
-      *ngIf="!(strategyError | async) && targetStrategy"
-      title="Target strategy"
-      [data]="targetStrategy"
-      [width]="350"
-      [height]="350"
-      [live]="true"
-    ></sb-pie-chart>
+    <div>
+      <sb-pie-chart
+        *ngIf="!(strategyError | async) && currentStrategy"
+        title="Current strategy"
+        [data]="currentStrategy"
+        [width]="300"
+        [height]="300"
+      ></sb-pie-chart>
+      <sb-pie-chart
+        *ngIf="!(strategyError | async) && targetStrategy"
+        title="Target strategy"
+        [data]="targetStrategy"
+        [width]="300"
+        [height]="300"
+        [live]="true"
+      ></sb-pie-chart>
+    </div>
   </div>
 
   <div class="kpi-container">

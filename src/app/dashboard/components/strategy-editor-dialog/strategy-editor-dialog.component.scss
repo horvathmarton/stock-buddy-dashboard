@@ -1,3 +1,4 @@
+@import '../../../../variables';
 
 .content {
   display: flex;
@@ -14,6 +15,22 @@
       width: 100%;
       display: flex;
       align-items: center;
+
+      .form-field {
+        margin-right: $margin-size;
+      }
+
+      .size {
+        width: 140px;
+      }
+
+      .delete-button {
+        margin-bottom: 16px;
+      }
+    }
+
+    .add-button {
+      margin-bottom: 10px;
     }
   }
 }

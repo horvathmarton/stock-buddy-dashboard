@@ -10,6 +10,10 @@
 .strategies-container {
     display: flex;
     flex-wrap: wrap;
+
+    .strategy {
+        cursor: pointer;
+    }
 }
 
 .spinner {

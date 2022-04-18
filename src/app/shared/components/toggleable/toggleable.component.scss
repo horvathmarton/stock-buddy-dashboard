@@ -1,0 +1,13 @@
+@import '../../../../variables';
+
+.toggle {
+  float: right;
+  margin: calc($margin-size / 4);
+
+  display: flex;
+  align-items: center;
+}
+
+.toggle-button {
+  margin: 0 calc($margin-size / 2);
+}

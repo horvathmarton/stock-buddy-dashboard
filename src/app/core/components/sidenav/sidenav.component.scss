@@ -1,7 +1,7 @@
 @import "../../../../variables";
 
 .sidenav-container {
-  height: 100%;
+  height: calc(100% - $toolbar-height);
 
   .nav-item {
     display: flex;
@@ -15,9 +15,4 @@
       margin: 0 calc($margin-size / 4);
     }
   }
-}
-
-.main-content-container {
-  overflow-y: hidden;
-  height: calc(100% - $toolbar-height);
 }
