@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { combineLatest } from 'rxjs';
 import { filter, map, take, tap } from 'rxjs/operators';
-import { DIALOG_BASE_CONFIG } from 'src/app/shared/data';
 import { isDefined } from 'src/app/shared/utils';
 import { StrategyEditorDialogComponent } from '../../components';
 import { Strategy } from '../../interfaces';
@@ -14,6 +13,13 @@ import { PortfolioIndicatorsQuery, StrategiesQuery } from '../../state';
   styleUrls: ['./dashboard.view.scss'],
 })
 export class DashboardViewComponent implements OnInit {
+  private readonly DIALOG_BASE_CONFIG = {
+    minHeight: '350px',
+    minWidth: '400px',
+    width: '70vw',
+    maxWidth: '800px',
+  };
+
   public readonly isLoading = combineLatest([
     this.strategiesQuery.selectLoading(),
     this.portfolioIndicatorsQuery.selectLoading(),
@@ -55,11 +61,11 @@ export class DashboardViewComponent implements OnInit {
     event.stopImmediatePropagation();
 
     this.dialog
-      .open(StrategyEditorDialogComponent, DIALOG_BASE_CONFIG)
+      .open(StrategyEditorDialogComponent, this.DIALOG_BASE_CONFIG)
       .afterClosed()
       .pipe(
         filter((result) => !!result),
-        tap(console.log)
+        tap((strategy: Strategy) => this.dashboardService.create(strategy))
       )
       .subscribe();
   }

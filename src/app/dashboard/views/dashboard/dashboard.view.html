@@ -21,11 +21,15 @@
       *ngIf="!(strategyError | async) && currentStrategy"
       title="Current strategy"
       [data]="currentStrategy"
+      [width]="350"
+      [height]="350"
     ></sb-pie-chart>
     <sb-pie-chart
       *ngIf="!(strategyError | async) && targetStrategy"
       title="Target strategy"
       [data]="targetStrategy"
+      [width]="350"
+      [height]="350"
     ></sb-pie-chart>
     <button mat-fab (click)="createStrategy($event)" color="primary">
       <mat-icon>add</mat-icon>

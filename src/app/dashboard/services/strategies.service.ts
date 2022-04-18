@@ -37,4 +37,20 @@ export class StrategiesService {
       )
       .subscribe();
   }
+
+  public create(strategy: Strategy): void {
+    this.store.setLoading(true);
+
+    this.http
+      .post<Strategy>(`/dashboard/strategies`, strategy)
+      .pipe(
+        tap((strategy) => this.store.add(strategy)),
+        catchError((errorResponse: ErrorResponse) => {
+          this.store.setError(errorResponse.error);
+
+          return EMPTY;
+        })
+      )
+      .subscribe();
+  }
 }
