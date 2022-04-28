@@ -9,7 +9,7 @@ import {
 } from './components';
 import { CoreRoutingModule } from './core-routing.module';
 import { AuthGuard } from './guards';
-import { BaseUrlInterceptor } from './interceptors';
+import { BaseUrlInterceptor, UnauthenticatedInterceptor } from './interceptors';
 import { AuthenticateInterceptor } from './interceptors/authenticate.interceptor';
 import { MaterialModule } from './material.module';
 import { AppViewComponent, NotFoundViewComponent } from './views';
@@ -44,6 +44,11 @@ const GUARDS = [AuthGuard];
     {
       provide: HTTP_INTERCEPTORS,
       useClass: AuthenticateInterceptor,
+      multi: true,
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: UnauthenticatedInterceptor,
       multi: true,
     },
   ],

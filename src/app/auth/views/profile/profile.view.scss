@@ -1,0 +1,14 @@
+@import '../../../../variables';
+
+.password-change-form {
+  width: 25%;
+  margin: $margin-size;
+  display: flex;
+  flex-flow: column;
+
+  .control-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+}

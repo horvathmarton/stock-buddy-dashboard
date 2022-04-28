@@ -23,6 +23,9 @@
     <mat-icon class="large-icon">account_circle</mat-icon>
   </button>
   <mat-menu #accountMenu="matMenu">
+    <button mat-menu-item [routerLink]="['auth', 'profile']">
+      Change password
+    </button>
     <button mat-menu-item (click)="logout()">Logout</button>
   </mat-menu>
 </mat-toolbar>

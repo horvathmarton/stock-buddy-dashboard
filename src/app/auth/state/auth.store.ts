@@ -3,13 +3,14 @@ import { persistState, Store, StoreConfig } from '@datorama/akita';
 
 export interface AuthState {
   authToken: string | null;
+  refreshToken: string | null;
 }
 
-@StoreConfig({ name: 'auth' })
+@StoreConfig({ name: 'auth', resettable: true })
 @Injectable({ providedIn: 'root' })
 export class AuthStore extends Store<AuthState> {
   constructor() {
-    super({ authToken: null });
+    super({ authToken: null, refreshToken: null });
   }
 }
 
