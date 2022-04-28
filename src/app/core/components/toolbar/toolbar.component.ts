@@ -10,7 +10,7 @@ import { AuthService } from 'src/app/auth/services';
 })
 export class ToolbarComponent implements OnDestroy {
   @Input()
-  public toggleSidenav!: Subject<boolean>;
+  public toggleSidenav!: Subject<boolean | undefined>;
 
   constructor(
     private readonly router: Router,

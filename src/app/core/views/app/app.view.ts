@@ -12,7 +12,7 @@ import { CoreQuery } from '../../state';
 export class AppViewComponent implements OnInit, OnDestroy {
   private onDestroy = new Subject<boolean>();
 
-  public readonly toggleSidenav = new Subject<boolean>();
+  public readonly toggleSidenav = new Subject<boolean | undefined>();
 
   @HostBinding('class')
   public theme!: string;
