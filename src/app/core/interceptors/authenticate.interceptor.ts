@@ -26,7 +26,7 @@ export class AuthenticateInterceptor implements HttpInterceptor {
         }
 
         const authedRequest = request.clone({
-          headers: request.headers.set('Authorization', `Token ${token}`),
+          headers: request.headers.set('Authorization', `Bearer ${token}`),
         });
 
         return next.handle(authedRequest);

@@ -7,6 +7,7 @@ import { AuthState } from './auth.store';
 export class AuthQuery extends Query<AuthState> {
   public isAuthenticated = this.select((state) => !!state.authToken);
   public authToken = this.select('authToken');
+  public refreshToken = this.select('refreshToken');
 
   constructor(protected store: AuthStore) {
     super(store);

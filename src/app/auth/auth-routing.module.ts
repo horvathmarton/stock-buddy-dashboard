@@ -1,11 +1,15 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { LoginViewComponent } from './views';
+import { LoginViewComponent, ProfileViewComponent } from './views';
 
 const routes: Routes = [
   {
     path: 'login',
     component: LoginViewComponent,
+  },
+  {
+    path: 'profile',
+    component: ProfileViewComponent,
   },
 ];
 

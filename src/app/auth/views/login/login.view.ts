@@ -3,7 +3,7 @@ import { AbstractControl, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { EMPTY } from 'rxjs';
 import { catchError, filter, finalize, take, tap } from 'rxjs/operators';
-import { ErrorResponse } from 'src/app/shared/types';
+import { ErrorResponse } from '../../../shared/types';
 import { AuthService } from '../../services';
 import { AuthQuery } from '../../state';
 
@@ -17,7 +17,7 @@ export class LoginViewComponent implements OnInit {
   public isLoading = false;
   public formError: string | null = null;
 
-  public form = this.fb.group({
+  public readonly form = this.fb.group({
     /* eslint-disable @typescript-eslint/unbound-method */
     username: [null, [Validators.required]],
     password: [null, [Validators.required]],
@@ -41,7 +41,7 @@ export class LoginViewComponent implements OnInit {
       .subscribe();
   }
 
-  public login() {
+  public login(): void {
     if (!this.form.valid) return;
 
     const { username, password } = this.form.value as LoginFormValues;
@@ -54,10 +54,7 @@ export class LoginViewComponent implements OnInit {
       .pipe(
         tap(() => void this.router.navigate(['/'])),
         catchError((errorResponse: ErrorResponse) => {
-          if (
-            errorResponse?.error?.non_field_errors?.[0] ===
-            'Unable to log in with provided credentials.'
-          ) {
+          if (errorResponse.error?.detail === 'Invalid username or password.') {
             this.formError = 'Invalid username or password.';
           } else {
             this.formError = 'An unhandled error happened.';

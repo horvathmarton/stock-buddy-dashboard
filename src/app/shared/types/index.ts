@@ -1,4 +1,4 @@
 export type ErrorResponse = {
-  error: Record<string, string[]>;
+  error: Record<string, string[] | string>;
   status: number;
 };
