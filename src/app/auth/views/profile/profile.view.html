@@ -1,48 +1,66 @@
 <sb-content-header title="Profile"></sb-content-header>
 
-<form [formGroup]="form" class="password-change-form">
-  <div class="mat-subheading-2">Change password</div>
+<div class="content">
+  <form [formGroup]="form" class="password-change-form">
+    <div class="mat-subheading-2">Change password</div>
 
-  <mat-form-field appearance="outline" class="form-field">
-    <input
-      matInput
-      formControlName="password"
-      placeholder="Password"
-      type="password"
-    />
-    <mat-error *ngIf="form.get('password')?.invalid"
-      >{{getErrorMessage(form.get('password'))}}</mat-error
-    >
-  </mat-form-field>
+    <mat-form-field appearance="outline" class="form-field">
+      <input
+        matInput
+        formControlName="password"
+        placeholder="Password"
+        type="password"
+      />
+      <mat-error *ngIf="form.get('password')?.invalid"
+        >{{getErrorMessage(form.get('password'))}}</mat-error
+      >
+    </mat-form-field>
 
-  <mat-form-field appearance="outline" class="form-field">
-    <input
-      matInput
-      formControlName="passwordConfirmation"
-      placeholder="Confirm password"
-      type="password"
-    />
-    <mat-error *ngIf="form.get('passwordConfirmation')?.invalid"
-      >{{getErrorMessage(form.get('passwordConfirmation'))}}</mat-error
-    >
-  </mat-form-field>
+    <mat-form-field appearance="outline" class="form-field">
+      <input
+        matInput
+        formControlName="passwordConfirmation"
+        placeholder="Confirm password"
+        type="password"
+      />
+      <mat-error *ngIf="form.get('passwordConfirmation')?.invalid"
+        >{{getErrorMessage(form.get('passwordConfirmation'))}}</mat-error
+      >
+    </mat-form-field>
 
-  <div class="control-row">
-    <mat-error *ngIf="formError">{{ formError }}</mat-error>
-    <mat-error *ngIf="!formError && form.invalid"
-      >{{ getErrorMessage(form) }}</mat-error
-    >
-    <div *ngIf="!formError && !form.invalid && message">{{ message }}</div>
+    <div class="control-row">
+      <mat-error *ngIf="formError">{{ formError }}</mat-error>
+      <mat-error *ngIf="!formError && form.invalid"
+        >{{ getErrorMessage(form) }}</mat-error
+      >
+      <div *ngIf="!formError && !form.invalid && message">{{ message }}</div>
 
-    <div class="divider"></div>
+      <div class="divider"></div>
 
-    <button
-      mat-flat-button
-      (click)="changePassword()"
-      color="primary"
-      class="submit-button"
-    >
-      Change
-    </button>
+      <button
+        mat-flat-button
+        (click)="changePassword()"
+        color="primary"
+        class="submit-button"
+      >
+        Change
+      </button>
+    </div>
+  </form>
+
+  <div class="version-info">
+    <div class="mat-subheading-2">Version</div>
+
+    <div class="version-section">
+      <div>Dashboard</div>
+      <div>Version: {{ dashboardVersion.version }}</div>
+      <div>Commit: {{ dashboardVersion.commit | slice:0:7 }}</div>
+    </div>
+
+    <div *ngIf="serverVersion | async; let server" class="version-section">
+      <div>API</div>
+      <div>Version: {{ server.version }}</div>
+      <div>Commit: {{ server.commit | slice:0:7 }}</div>
+    </div>
   </div>
-</form>
+</div>

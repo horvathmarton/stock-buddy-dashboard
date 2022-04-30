@@ -2,9 +2,11 @@ import { Component } from '@angular/core';
 import { AbstractControl, FormBuilder, Validators } from '@angular/forms';
 import { EMPTY } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
+import { CoreService } from 'src/app/core/services';
 import { AuthService } from '../../services';
 import { PasswordChangeFormValues } from '../../types';
 import { passwordConfirmMatch } from '../../validators';
+import packageInfo from '../../../../../package.json';
 
 @Component({
   templateUrl: './profile.view.html',
@@ -13,6 +15,12 @@ import { passwordConfirmMatch } from '../../validators';
 export class ProfileViewComponent {
   public formError: string | null = null;
   public message: string | null = null;
+
+  public readonly serverVersion = this.coreService.version();
+  public readonly dashboardVersion = {
+    version: packageInfo.version,
+    commit: packageInfo.commit,
+  };
 
   public readonly form = this.builder.group(
     {
@@ -26,7 +34,8 @@ export class ProfileViewComponent {
 
   constructor(
     private readonly auth: AuthService,
-    private readonly builder: FormBuilder
+    private readonly builder: FormBuilder,
+    private readonly coreService: CoreService
   ) {}
 
   public changePassword(): void {

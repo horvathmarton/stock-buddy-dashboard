@@ -1,14 +1,26 @@
 @import '../../../../variables';
 
-.password-change-form {
-  width: 25%;
-  margin: $margin-size;
+.content {
   display: flex;
-  flex-flow: column;
 
-  .control-row {
+  .password-change-form {
+    width: 25%;
+    margin: $margin-size;
     display: flex;
-    justify-content: space-between;
-    align-items: center;
+    flex-flow: column;
+  
+    .control-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+  }
+
+  .version-info {
+    margin: $margin-size;
+
+    .version-section {
+      margin: calc($margin-size / 2) 0;
+    }
   }
 }
