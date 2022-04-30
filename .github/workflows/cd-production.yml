@@ -19,6 +19,8 @@ jobs:
           key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
             ${{ runner.os }}-node-
+      - run: >
+          sed -i "s/\"commit\": \"unknown\",/\"commit\": \"${{ github.sha }}\",/g" package.json
       - run: npm ci
       - run: npm run build -- --configuration=production
       - run: |
