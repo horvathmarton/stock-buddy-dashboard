@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -13,11 +13,12 @@ import {
   tap,
   withLatestFrom,
 } from 'rxjs/operators';
-import { isDefined } from 'src/app/shared/utils';
 import {
-  StockPortfolioDialogComponent,
-  StockTransactionDialogComponent,
-} from '../../components';
+  BasicEntityDialogComponent,
+  DisposableComponent,
+} from 'src/app/shared/components';
+import { isDefined } from 'src/app/shared/utils';
+import { StockTransactionDialogComponent } from '../../components';
 import {
   StockPortfolio,
   StockPosition,
@@ -32,9 +33,10 @@ type PageControlValues = { portfolio: StockPortfolio; as_of: Date };
   templateUrl: './portfolio.view.html',
   styleUrls: ['./portfolio.view.scss'],
 })
-export class PortfolioSummaryViewComponent implements OnInit, OnDestroy {
-  private readonly onDestroy = new Subject<boolean>();
-
+export class PortfolioSummaryViewComponent
+  extends DisposableComponent
+  implements OnInit
+{
   private readonly DIALOG_BASE_CONFIG = {
     minHeight: '300px',
     minWidth: '400px',
@@ -75,7 +77,9 @@ export class PortfolioSummaryViewComponent implements OnInit, OnDestroy {
     private readonly stockPortfolioService: PortfolioService,
     private readonly stockService: StockService,
     public readonly query: StockPortfolioQuery
-  ) {}
+  ) {
+    super();
+  }
 
   public ngOnInit(): void {
     this.stockPortfolioService.list();
@@ -88,7 +92,10 @@ export class PortfolioSummaryViewComponent implements OnInit, OnDestroy {
 
   public createPortfolio(): void {
     this.dialog
-      .open(StockPortfolioDialogComponent, this.DIALOG_BASE_CONFIG)
+      .open(BasicEntityDialogComponent, {
+        ...this.DIALOG_BASE_CONFIG,
+        data: { title: 'Create portfolio' },
+      })
       .afterClosed()
       .pipe(
         filter((result) => !!result),
@@ -99,20 +106,23 @@ export class PortfolioSummaryViewComponent implements OnInit, OnDestroy {
       .subscribe();
   }
 
-  public editPortfolio(id: number, event: Event): void {
+  public editPortfolio(event: Event, id: number): void {
     event.stopImmediatePropagation();
 
     this.query.portfolios
       .pipe(
         switchMap((portfolios) =>
           this.dialog
-            .open(StockPortfolioDialogComponent, {
+            .open(BasicEntityDialogComponent, {
               ...this.DIALOG_BASE_CONFIG,
-              data: portfolios.find((p) => p.id === id),
+              data: {
+                entity: portfolios.find((p) => p.id === id),
+                title: 'Edit portfolio',
+              },
             })
             .afterClosed()
         ),
-        filter((result) => !!result),
+        filter((result) => isDefined(result)),
         tap((portfolio: StockPortfolio) =>
           this.stockPortfolioService.update(portfolio)
         ),
@@ -248,10 +258,5 @@ export class PortfolioSummaryViewComponent implements OnInit, OnDestroy {
         takeUntil(this.onDestroy)
       )
       .subscribe();
-  }
-
-  public ngOnDestroy(): void {
-    this.onDestroy.next(true);
-    this.onDestroy.complete();
   }
 }

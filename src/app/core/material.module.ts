@@ -20,6 +20,7 @@ import { MatNativeDateModule, MAT_DATE_LOCALE } from '@angular/material/core';
 import { MatCardModule } from '@angular/material/card';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 
 const MODULES = [
   NgApexchartsModule,
@@ -43,6 +44,7 @@ const MODULES = [
   MatCardModule,
   MatDialogModule,
   MatAutocompleteModule,
+  MatCheckboxModule,
 ];
 
 @NgModule({

@@ -1,6 +1,5 @@
-export interface StockPortfolio {
-  id?: number;
-  name: string;
-  description?: string;
+import { BasicEntity } from 'src/app/shared/interfaces';
+
+export interface StockPortfolio extends BasicEntity {
   owner?: string;
 }

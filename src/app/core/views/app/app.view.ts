@@ -1,8 +1,9 @@
-import { Component, HostBinding, OnDestroy, OnInit } from '@angular/core';
+import { Component, HostBinding, OnInit } from '@angular/core';
 import { Subject } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 import { AuthService } from 'src/app/auth/services';
 import { AuthQuery } from 'src/app/auth/state';
+import { DisposableComponent } from 'src/app/shared/components';
 import { CoreQuery } from '../../state';
 
 @Component({
@@ -10,9 +11,7 @@ import { CoreQuery } from '../../state';
   templateUrl: './app.view.html',
   styleUrls: ['./app.view.scss'],
 })
-export class AppViewComponent implements OnInit, OnDestroy {
-  private onDestroy = new Subject<boolean>();
-
+export class AppViewComponent extends DisposableComponent implements OnInit {
   public readonly toggleSidenav = new Subject<boolean | undefined>();
 
   @HostBinding('class')
@@ -22,7 +21,9 @@ export class AppViewComponent implements OnInit, OnDestroy {
     private readonly coreQuery: CoreQuery,
     public readonly authQuery: AuthQuery,
     public readonly authService: AuthService
-  ) {}
+  ) {
+    super();
+  }
 
   public ngOnInit(): void {
     this.coreQuery.isDark
@@ -40,10 +41,5 @@ export class AppViewComponent implements OnInit, OnDestroy {
      * browser is open for more than a day we will log out the user on the next request.
      */
     this.authService.refreshTokens().subscribe();
-  }
-
-  public ngOnDestroy(): void {
-    this.onDestroy.next(true);
-    this.onDestroy.complete();
   }
 }

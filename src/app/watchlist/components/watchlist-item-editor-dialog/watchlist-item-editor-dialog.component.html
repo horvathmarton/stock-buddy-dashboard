@@ -1,0 +1,140 @@
+<div *ngIf="mode === 'create'" mat-dialog-title>Add to watchlist</div>
+<div *ngIf="mode === 'edit'" mat-dialog-title>Watchlist item editor</div>
+<div mat-dialog-content>
+  <form [formGroup]="form">
+    <mat-form-field appearance="outline" class="form-field">
+      <mat-label>Ticker</mat-label>
+      <input matInput formControlName="ticker" [matAutocomplete]="auto" />
+      <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
+        <mat-option *ngFor="let stock of stocks | async" [value]="stock.ticker">
+          {{ stock.name }}
+        </mat-option>
+      </mat-autocomplete>
+      <mat-error *ngIf="form.get('ticker')?.invalid">{{
+        getErrorMessage(form.get("ticker"))
+      }}</mat-error>
+    </mat-form-field>
+
+    <mat-tab-group *ngIf="mode === 'edit'">
+      <mat-tab label="Target prices" class="editor-tab">
+        <div
+          *ngFor="let target of targetPrices.controls; let i = index"
+          class="line-item"
+        >
+          <mat-form-field appearance="outline" class="form-field size">
+            <mat-label>Name</mat-label>
+            <input
+              matInput
+              [formControl]="getTargetPriceControls(i).name"
+              autocomplete="off"
+            />
+            <mat-error *ngIf="getTargetPriceControls(i).name?.invalid">{{
+              getErrorMessage(getTargetPriceControls(i).name)
+            }}</mat-error>
+          </mat-form-field>
+          <mat-form-field appearance="outline" class="form-field size">
+            <mat-label>Price</mat-label>
+            <input
+              matInput
+              [formControl]="getTargetPriceControls(i).price"
+              autocomplete="off"
+              type="number"
+            />
+            <mat-error *ngIf="getTargetPriceControls(i).price?.invalid">{{
+              getErrorMessage(getTargetPriceControls(i).price)
+            }}</mat-error>
+          </mat-form-field>
+
+          <button
+            mat-icon-button
+            (click)="removeTargetPrice(i)"
+            color="warn"
+            class="remove-button"
+          >
+            <mat-icon>remove_circle</mat-icon>
+          </button>
+        </div>
+
+        <mat-error *ngIf="form.get('targetPrices')?.hasError('nonUniqueItems')">
+          {{ getErrorMessage(form.get("targetPrices")) }}
+        </mat-error>
+
+        <button
+          mat-mini-fab
+          (click)="addTargetPrice()"
+          color="primary"
+          class="add-button"
+        >
+          <mat-icon>add</mat-icon>
+        </button>
+      </mat-tab>
+      <mat-tab label="Position sizes" class="editor-tab">
+        <div
+          *ngFor="let target of positionSizes.controls; let i = index"
+          class="line-item"
+        >
+          <mat-form-field appearance="outline" class="form-field size">
+            <mat-label>Name</mat-label>
+            <input
+              matInput
+              [formControl]="getPositionSizeControls(i).name"
+              autocomplete="off"
+            />
+            <mat-error *ngIf="getPositionSizeControls(i).name?.invalid">{{
+              getErrorMessage(getPositionSizeControls(i).name)
+            }}</mat-error>
+          </mat-form-field>
+          <mat-form-field appearance="outline" class="form-field size">
+            <mat-label>Size</mat-label>
+            <input
+              matInput
+              [formControl]="getPositionSizeControls(i).size"
+              autocomplete="off"
+              type="number"
+            />
+            <mat-error *ngIf="getPositionSizeControls(i).size?.invalid">{{
+              getErrorMessage(getPositionSizeControls(i).size)
+            }}</mat-error>
+          </mat-form-field>
+
+          <mat-checkbox
+            [formControl]="getPositionSizeControls(i).atCost"
+            color="primary"
+            class="checkbox"
+            >At cost</mat-checkbox
+          >
+
+          <button
+            mat-icon-button
+            (click)="removePositionSize(i)"
+            color="warn"
+            class="remove-button"
+          >
+            <mat-icon>remove_circle</mat-icon>
+          </button>
+        </div>
+
+        <mat-error
+          *ngIf="form.get('positionSizes')?.hasError('nonUniqueItems')"
+        >
+          {{ getErrorMessage(form.get("positionSizes")) }}
+        </mat-error>
+
+        <button
+          mat-mini-fab
+          (click)="addPositionSize()"
+          color="primary"
+          class="add-button"
+        >
+          <mat-icon>add</mat-icon>
+        </button>
+      </mat-tab>
+    </mat-tab-group>
+  </form>
+</div>
+<div mat-dialog-actions class="actions">
+  <button mat-button [mat-dialog-close]="">Cancel</button>
+  <button (click)="save()" mat-button color="primary" cdkFocusInitial>
+    Save
+  </button>
+</div>

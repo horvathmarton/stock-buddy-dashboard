@@ -1,13 +1,18 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { StockPortfolio } from '../../interfaces';
+import { BasicEntity } from '../../interfaces';
+
+interface DialogData {
+  title: string;
+  entity: BasicEntity;
+}
 
 @Component({
-  templateUrl: './stock-portfolio-dialog.component.html',
-  styleUrls: ['./stock-portfolio-dialog.component.scss'],
+  templateUrl: './basic-entity-dialog.component.html',
+  styleUrls: ['./basic-entity-dialog.component.scss'],
 })
-export class StockPortfolioDialogComponent implements OnInit {
+export class BasicEntityDialogComponent implements OnInit {
   public form = this.builder.group({
     /* eslint-disable @typescript-eslint/unbound-method */
     id: null,
@@ -18,13 +23,13 @@ export class StockPortfolioDialogComponent implements OnInit {
 
   constructor(
     private builder: FormBuilder,
-    private dialogRef: MatDialogRef<StockPortfolioDialogComponent>,
+    private dialogRef: MatDialogRef<BasicEntityDialogComponent>,
     @Inject(MAT_DIALOG_DATA)
-    public data: StockPortfolio
+    public data: DialogData
   ) {}
 
   public ngOnInit(): void {
-    this.form.patchValue(this.data);
+    this.form.patchValue(this.data.entity);
   }
 
   public save(): void {

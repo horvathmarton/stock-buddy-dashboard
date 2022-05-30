@@ -25,12 +25,17 @@
           class="option"
         >
           {{ portfolio.name }}
-          <button
-            (click)="editPortfolio(portfolio.id!, $event)"
-            mat-icon-button
-          >
-            <mat-icon>edit</mat-icon>
-          </button>
+          <div>
+            <button
+              (click)="editPortfolio($event, portfolio.id!)"
+              mat-icon-button
+            >
+              <mat-icon>edit</mat-icon>
+            </button>
+            <button color="warn" [disabled]="true" mat-icon-button>
+              <mat-icon>delete</mat-icon>
+            </button>
+          </div>
         </mat-option>
       </mat-select>
     </mat-form-field>
