@@ -78,26 +78,20 @@ export class PortfolioService {
   public update(portfolio: StockPortfolio): void {
     this.store.setLoading(true);
 
-    /* eslint-disable @typescript-eslint/no-non-null-assertion */
     this.http
-      .put<StockPortfolio>(`/stocks/portfolios/${portfolio.id!}`, portfolio)
+      .put<StockPortfolio>(`/stocks/portfolios/${portfolio.id}`, portfolio)
       .pipe(
         tap(
           (updatedPortfolio) =>
             void this.store.update(
-              updatedPortfolio.id!.toString(),
+              updatedPortfolio.id.toString(),
               updatedPortfolio
             )
         ),
-        catchError((errorResponse: ErrorResponse) => {
-          this.store.setError(errorResponse.error);
-
-          return EMPTY;
-        }),
+        defaultCatchError(this.store),
         finalize(() => this.store.setLoading(false))
       )
       .subscribe();
-    /* eslint-enable */
   }
 
   public select(portfolio?: StockPortfolio): void {

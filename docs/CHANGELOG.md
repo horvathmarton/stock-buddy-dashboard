@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Change password flow.
 - Version info section to profile view.
+- Watchlist details view.
+- Create and edit watchlist flow.
+- Add and remove items from a watchlist flow.
+- Add editor to add targets to watchlist items.
 - Add `roic_since_inception` and `total_floating_pnl` KPIs to the dashboard.
 
 ## [1.1.0] - 2022-04-19

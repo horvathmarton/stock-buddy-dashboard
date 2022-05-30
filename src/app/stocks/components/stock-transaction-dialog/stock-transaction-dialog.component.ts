@@ -1,9 +1,10 @@
-import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { format } from 'date-fns';
-import { Observable, Subject } from 'rxjs';
+import { Observable } from 'rxjs';
 import { startWith, switchMap, take, takeUntil, tap } from 'rxjs/operators';
+import { DisposableComponent } from 'src/app/shared/components';
 import {
   integerValidator,
   tickerExistsValidator,
@@ -16,9 +17,10 @@ import { StockPortfolioQuery, StockQuery } from '../../state';
   templateUrl: './stock-transaction-dialog.component.html',
   styleUrls: ['./stock-transaction-dialog.component.scss'],
 })
-export class StockTransactionDialogComponent implements OnInit, OnDestroy {
-  private readonly onDestroy = new Subject<boolean>();
-
+export class StockTransactionDialogComponent
+  extends DisposableComponent
+  implements OnInit
+{
   public readonly portfolios = this.portfoliosQuery.portfolios;
   public readonly tickerValidator = tickerExistsValidator(this.stocksQuery);
 
@@ -44,7 +46,9 @@ export class StockTransactionDialogComponent implements OnInit, OnDestroy {
     private readonly portfoliosQuery: StockPortfolioQuery,
     @Inject(MAT_DIALOG_DATA)
     public readonly data: StockTransaction
-  ) {}
+  ) {
+    super();
+  }
 
   public ngOnInit(): void {
     this.stockService.list();
@@ -107,10 +111,5 @@ export class StockTransactionDialogComponent implements OnInit, OnDestroy {
       switchMap((filter: string) => this.stocksQuery.filteredStocks(filter)),
       takeUntil(this.onDestroy)
     );
-  }
-
-  public ngOnDestroy(): void {
-    this.onDestroy.next(true);
-    this.onDestroy.complete();
   }
 }

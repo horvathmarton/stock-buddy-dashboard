@@ -7,7 +7,6 @@ import {
   BasicStockDataTable,
   StockDividendTableComponent,
   StockPnlTableComponent,
-  StockPortfolioDialogComponent,
   StockRiskTable,
   StockTransactionDialogComponent,
 } from './components';
@@ -20,7 +19,6 @@ const COMPONENTS = [
   StockRiskTable,
   StockDividendTableComponent,
   StockPnlTableComponent,
-  StockPortfolioDialogComponent,
   StockTransactionDialogComponent,
 ];
 

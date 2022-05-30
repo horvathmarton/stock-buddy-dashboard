@@ -1,0 +1,64 @@
+<mat-table [dataSource]="(dataSource | async)!" matSort class="table">
+  <ng-container matColumnDef="ticker">
+    <mat-header-cell *matHeaderCellDef mat-sort-header>Ticker</mat-header-cell>
+    <mat-cell *matCellDef="let row">{{ row.ticker }}</mat-cell>
+    <mat-footer-cell *matFooterCellDef>Add a new item</mat-footer-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="nextTargetPrice">
+    <mat-header-cell *matHeaderCellDef mat-sort-header
+      >Next target price</mat-header-cell
+    >
+    <mat-cell *matCellDef="let row"> N/A </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="nextPositionSizes">
+    <mat-header-cell *matHeaderCellDef mat-sort-header
+      >Next position size</mat-header-cell
+    >
+    <mat-cell *matCellDef="let row"> N/A </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="targetPrices">
+    <mat-header-cell *matHeaderCellDef mat-sort-header
+      >Target prices</mat-header-cell
+    >
+    <mat-cell *matCellDef="let row">{{
+      row.target_prices.length | i18nPlural: targetMapping
+    }}</mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="positionSizes">
+    <mat-header-cell *matHeaderCellDef mat-sort-header
+      >Position sizes</mat-header-cell
+    >
+    <mat-cell *matCellDef="let row">{{
+      row.position_sizes.length | i18nPlural: targetMapping
+    }}</mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="controls">
+    <mat-header-cell *matHeaderCellDef mat-sort-header></mat-header-cell>
+    <mat-cell *matCellDef="let row" class="controls-cell">
+      <button (click)="editOnWatchlist($event, row.ticker)" mat-icon-button>
+        <mat-icon>edit</mat-icon>
+      </button>
+      <button
+        (click)="removeFromWatchlist($event, row.ticker)"
+        color="warn"
+        mat-icon-button
+      >
+        <mat-icon>remove_circle</mat-icon>
+      </button>
+    </mat-cell>
+    <mat-footer-cell *matFooterCellDef class="controls-cell">
+      <button (click)="addToWatchlist($event)" color="primary" mat-icon-button>
+        <mat-icon>add_circle</mat-icon>
+      </button>
+    </mat-footer-cell>
+  </ng-container>
+
+  <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+  <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+  <mat-footer-row *matFooterRowDef="['ticker', 'controls']"></mat-footer-row>
+</mat-table>

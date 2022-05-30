@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import {
   AbstractControl,
   FormArray,
@@ -8,7 +8,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
-import { Subject } from 'rxjs';
+import { DisposableComponent } from 'src/app/shared/components';
 import { integerValidator, uniqueItem } from 'src/app/shared/validators';
 import { ASSET_TYPES } from '../../data';
 import { strategySum } from '../../validators';
@@ -17,9 +17,10 @@ import { strategySum } from '../../validators';
   templateUrl: './strategy-editor-dialog.component.html',
   styleUrls: ['./strategy-editor-dialog.component.scss'],
 })
-export class StrategyEditorDialogComponent implements OnInit, OnDestroy {
-  private readonly onDestroy = new Subject<boolean>();
-
+export class StrategyEditorDialogComponent
+  extends DisposableComponent
+  implements OnInit
+{
   public readonly ASSET_TYPES = ASSET_TYPES;
   public readonly form = this.builder.group({
     /* eslint-disable @typescript-eslint/unbound-method */
@@ -35,7 +36,9 @@ export class StrategyEditorDialogComponent implements OnInit, OnDestroy {
   constructor(
     private readonly builder: FormBuilder,
     private readonly dialogRef: MatDialogRef<StrategyEditorDialogComponent>
-  ) {}
+  ) {
+    super();
+  }
 
   public ngOnInit(): void {
     this.addStrategyItem(ASSET_TYPES[0].value, 100);
@@ -105,10 +108,5 @@ export class StrategyEditorDialogComponent implements OnInit, OnDestroy {
       name: FormControl;
       size: FormControl;
     };
-  }
-
-  public ngOnDestroy(): void {
-    this.onDestroy.next(true);
-    this.onDestroy.complete();
   }
 }

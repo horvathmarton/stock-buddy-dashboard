@@ -26,6 +26,12 @@ const routes: Routes = [
       import('../dashboard/dashboard.module').then((m) => m.DashboardModule),
   },
   {
+    path: 'watchlist',
+    canActivate: [AuthGuard],
+    loadChildren: () =>
+      import('../watchlist/watchlist.module').then((m) => m.WatchlistModule),
+  },
+  {
     path: '**',
     component: NotFoundViewComponent,
   },
