@@ -1,7 +1,11 @@
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
-import { NgModule } from '@angular/core';
+import { APP_INITIALIZER, ErrorHandler, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { Router } from '@angular/router';
+import { AkitaNgDevtools } from '@datorama/akita-ngdevtools';
+import * as Sentry from '@sentry/angular';
+import { environment } from 'src/environments/environment';
 import {
   DarkModeToggleComponent,
   SidenavComponent,
@@ -13,8 +17,6 @@ import { BaseUrlInterceptor, UnauthenticatedInterceptor } from './interceptors';
 import { AuthenticateInterceptor } from './interceptors/authenticate.interceptor';
 import { MaterialModule } from './material.module';
 import { AppViewComponent, NotFoundViewComponent } from './views';
-import { AkitaNgDevtools } from '@datorama/akita-ngdevtools';
-import { environment } from 'src/environments/environment';
 
 const VIEWS = [AppViewComponent, NotFoundViewComponent];
 const COMPONENTS = [
@@ -49,6 +51,22 @@ const GUARDS = [AuthGuard];
     {
       provide: HTTP_INTERCEPTORS,
       useClass: UnauthenticatedInterceptor,
+      multi: true,
+    },
+    {
+      provide: ErrorHandler,
+      useValue: Sentry.createErrorHandler(),
+    },
+    {
+      provide: Sentry.TraceService,
+      deps: [Router],
+    },
+    {
+      provide: APP_INITIALIZER,
+      /* eslint-disable @typescript-eslint/no-empty-function */
+      useFactory: () => () => {},
+      /* eslint-enable */
+      deps: [Sentry.TraceService],
       multi: true,
     },
   ],
