@@ -71,16 +71,30 @@
     ></sb-kpi>
     <sb-kpi
       *ngIf="!(indicatorsError | async) && (indicators | async)"
-      name="Annualized ROIC"
-      [value]="(indicators | async)!.annualized_roic"
+      name="PnL"
+      [value]="(indicators | async)!.total_floating_pnl"
+      type="currency"
+      class="kpi"
+    ></sb-kpi>
+    <sb-kpi
+      *ngIf="!(indicatorsError | async) && (indicators | async)"
+      name="Dividend income"
+      [value]="(indicators | async)!.annual_dividend_income"
+      type="currency"
+      class="kpi"
+    ></sb-kpi>
+    <sb-kpi
+      *ngIf="!(indicatorsError | async) && (indicators | async)"
+      name="ROIC"
+      [value]="(indicators | async)!.roic_since_inception"
       type="percentage"
       class="kpi"
     ></sb-kpi>
     <sb-kpi
       *ngIf="!(indicatorsError | async) && (indicators | async)"
-      name="Annual dividend income"
-      [value]="(indicators | async)!.annual_dividend_income"
-      type="currency"
+      name="Annualized ROIC"
+      [value]="(indicators | async)!.annualized_roic"
+      type="percentage"
       class="kpi"
     ></sb-kpi>
   </div>

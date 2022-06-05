@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Change password flow.
 - Version info section to profile view.
+- Add `roic_since_inception` and `total_floating_pnl` KPIs to the dashboard.
 
 ## [1.1.0] - 2022-04-19
 
