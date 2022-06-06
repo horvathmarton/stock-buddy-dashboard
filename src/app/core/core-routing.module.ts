@@ -32,6 +32,11 @@ const routes: Routes = [
       import('../watchlist/watchlist.module').then((m) => m.WatchlistModule),
   },
   {
+    path: 'cash',
+    canActivate: [AuthGuard],
+    loadChildren: () => import('../cash/cash.module').then((m) => m.CashModule),
+  },
+  {
     path: '**',
     component: NotFoundViewComponent,
   },

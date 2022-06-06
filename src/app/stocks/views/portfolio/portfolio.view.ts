@@ -13,18 +13,19 @@ import {
   tap,
   withLatestFrom,
 } from 'rxjs/operators';
+import { StockTransactionDialogComponent } from 'src/app/cash/components';
+import { TransactionsService } from 'src/app/cash/services';
 import {
   BasicEntityDialogComponent,
   DisposableComponent,
 } from 'src/app/shared/components';
 import { isDefined } from 'src/app/shared/utils';
-import { StockTransactionDialogComponent } from '../../components';
 import {
   StockPortfolio,
   StockPosition,
   StockTransaction,
 } from '../../interfaces';
-import { PortfolioService, StockService } from '../../services';
+import { PortfolioService } from '../../services';
 import { StockPortfolioQuery } from '../../state';
 
 type PageControlValues = { portfolio: StockPortfolio; as_of: Date };
@@ -70,13 +71,13 @@ export class PortfolioSummaryViewComponent
   public annualizedPnl!: Record<string, number>;
 
   constructor(
+    public readonly query: StockPortfolioQuery,
+    private readonly router: Router,
     private readonly dialog: MatDialog,
     private readonly builder: FormBuilder,
-    private readonly router: Router,
     private readonly route: ActivatedRoute,
     private readonly stockPortfolioService: PortfolioService,
-    private readonly stockService: StockService,
-    public readonly query: StockPortfolioQuery
+    private readonly transactionsService: TransactionsService
   ) {
     super();
   }
@@ -253,7 +254,7 @@ export class PortfolioSummaryViewComponent
         }),
         filter((result) => !!result),
         tap((transaction: StockTransaction) =>
-          this.stockService.createTransaction(transaction)
+          this.transactionsService.createStockTransaction(transaction)
         ),
         takeUntil(this.onDestroy)
       )

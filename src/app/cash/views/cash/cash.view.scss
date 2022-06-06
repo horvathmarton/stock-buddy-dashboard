@@ -1,0 +1,42 @@
+@import '../../../../variables';
+
+.content {
+    margin: 0 $margin-size;
+
+    .balance {
+        height: 15vh;
+        margin-bottom: $margin-size;
+
+        .kpi {
+            display: inline-block;
+            width: 300px;
+            margin-right: $margin-size;
+        }
+    }
+
+
+    .transactions {
+        display: flex;
+    
+        .transaction-table {
+            flex-grow: 1;
+            margin: 0 calc($margin-size / 2);
+        }
+
+        .transaction-table:first-child {
+            margin-left: 0;
+        }
+
+        .transaction-table:last-child {
+            margin-right: 0;
+        }
+    }
+
+    .spinner-container {
+        flex-grow: 1;
+
+        .spinner {
+            margin: 0 auto;
+        }
+    }
+}

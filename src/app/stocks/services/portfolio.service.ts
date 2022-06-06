@@ -2,7 +2,8 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { format } from 'date-fns';
 import { EMPTY } from 'rxjs';
-import { catchError, finalize, tap } from 'rxjs/operators';
+import { catchError, finalize, pluck, tap } from 'rxjs/operators';
+import { ApiPaginationResponse } from 'src/app/shared/types';
 import { defaultCatchError } from 'src/app/shared/operators';
 import { ErrorResponse } from 'src/app/shared/types';
 import { StockPortfolio, StockPortfolioSummary } from '../interfaces';
@@ -21,8 +22,9 @@ export class PortfolioService {
     this.store.setLoading(true);
 
     this.http
-      .get<StockPortfolio[]>(`/stocks/portfolios`)
+      .get<ApiPaginationResponse<StockPortfolio>>(`/stocks/portfolios`)
       .pipe(
+        pluck('results'),
         tap((portfolios) => {
           this.store.set(portfolios);
           this.store.setLoading(true);
@@ -33,7 +35,7 @@ export class PortfolioService {
   }
 
   public summary(
-    id: string | number = 'summary',
+    id: number | 'summary' = 'summary',
     asOf: Date = new Date()
   ): void {
     this.store.setLoading(true);

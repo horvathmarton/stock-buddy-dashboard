@@ -1,7 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { finalize, tap } from 'rxjs';
+import { finalize, pluck, tap } from 'rxjs';
 import { defaultCatchError } from 'src/app/shared/operators';
+import { ApiPaginationResponse } from 'src/app/shared/types';
 import { Watchlist, WatchlistItem, WatchlistListItem } from '../interfaces';
 import { WatchlistStore } from '../state';
 
@@ -16,8 +17,9 @@ export class WatchlistService {
     this.store.setLoading(true);
 
     this.http
-      .get<WatchlistListItem[]>(`/stocks/watchlists`)
+      .get<ApiPaginationResponse<WatchlistListItem>>(`/stocks/watchlists`)
       .pipe(
+        pluck('results'),
         tap((watchlists) => this.store.set(watchlists)),
         defaultCatchError(this.store),
         finalize(() => this.store.setLoading(false))

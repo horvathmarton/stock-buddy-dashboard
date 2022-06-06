@@ -16,6 +16,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add and remove items from a watchlist flow.
 - Add editor to add targets to watchlist items.
 - Add `roic_since_inception` and `total_floating_pnl` KPIs to the dashboard.
+- Cash view.
+- Add cash, forex and stock transaction flow.
 
 ## [1.1.0] - 2022-04-19
 

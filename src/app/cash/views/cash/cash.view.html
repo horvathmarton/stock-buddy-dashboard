@@ -1,0 +1,62 @@
+<sb-content-header title="Cash"></sb-content-header>
+
+<div class="content">
+  <div class="balance">
+    <div *ngIf="cashQuery.total | async; let balance; else spinner">
+      <sb-kpi
+        name="Total USD"
+        [value]="balance.usd"
+        type="currency"
+        class="kpi"
+      ></sb-kpi>
+      <sb-kpi
+        name="Total EUR"
+        [value]="balance.eur"
+        currency="EUR"
+        type="currency"
+        class="kpi"
+      ></sb-kpi>
+      <sb-kpi
+        name="Total HUF"
+        [value]="balance.huf"
+        currency="HUF"
+        type="currency"
+        class="kpi"
+      ></sb-kpi>
+    </div>
+  </div>
+
+  <div class="mat-subheading-2">Latest transactions</div>
+  <div class="transactions">
+    <sb-transaction-table
+      *ngIf="cashTransactions | async; else spinner"
+      [transactionsStream]="cashTransactions"
+      [displayedColumns]="['date', 'amount', 'currency']"
+      [createTransaction]="createCashTransaction"
+      title="Cash"
+      class="transaction-table"
+    ></sb-transaction-table>
+    <sb-transaction-table
+      *ngIf="forexTransactions | async; else spinner"
+      [transactionsStream]="forexTransactions"
+      [displayedColumns]="['date', 'amount', 'ratio', 'source_currency', 'target_currency']"
+      [createTransaction]="createForexTransaction"
+      title="Forex"
+      class="transaction-table"
+    ></sb-transaction-table>
+    <sb-transaction-table
+      *ngIf="stockTransactions | async; else spinner"
+      [transactionsStream]="stockTransactions"
+      [displayedColumns]="['date', 'amount', 'ticker', 'price']"
+      [createTransaction]="createStockTransaction"
+      title="Stock"
+      class="transaction-table"
+    ></sb-transaction-table>
+
+    <ng-template #spinner>
+      <div class="spinner-container">
+        <mat-spinner class="spinner"></mat-spinner>
+      </div>
+    </ng-template>
+  </div>
+</div>

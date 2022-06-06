@@ -4,6 +4,7 @@ export * from './confirmation-dialog/confirmation-dialog.component';
 export * from './content-header/content-header.component';
 export * from './disposable/disposable.component';
 export * from './error-message/error-message.component';
+export * from './kpi/kpi.component';
 export * from './pie-chart/pie-chart.component';
 export * from './toggleable/toggleable.component';
 export * from './treemap-chart/treemap-chart.component';

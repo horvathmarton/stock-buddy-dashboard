@@ -2,58 +2,57 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { format } from 'date-fns';
-import { Observable } from 'rxjs';
-import { startWith, switchMap, take, takeUntil, tap } from 'rxjs/operators';
+import { take, tap } from 'rxjs';
 import { DisposableComponent } from 'src/app/shared/components';
-import {
-  integerValidator,
-  tickerExistsValidator,
-} from 'src/app/shared/validators';
-import { Stock, StockPortfolio, StockTransaction } from '../../interfaces';
-import { StockService } from '../../services';
-import { StockPortfolioQuery, StockQuery } from '../../state';
+import { Currency } from 'src/app/shared/types';
+import { StockPortfolio } from 'src/app/stocks/interfaces';
+import { StockPortfolioQuery } from 'src/app/stocks/state';
+import { CURRENCIES } from '../../data';
+import { ForexTransaction } from '../../interfaces';
+
+export interface ForexTransactionDialogResult {
+  sourceCurrency: Currency;
+  targetCurrency: Currency;
+  amount: number;
+  ratio: number;
+  date: Date;
+  portfolio: number;
+}
 
 @Component({
-  templateUrl: './stock-transaction-dialog.component.html',
-  styleUrls: ['./stock-transaction-dialog.component.scss'],
+  templateUrl: './forex-transaction-dialog.component.html',
+  styleUrls: ['./forex-transaction-dialog.component.scss'],
 })
-export class StockTransactionDialogComponent
+export class ForexTransactionDialogComponent
   extends DisposableComponent
   implements OnInit
 {
+  public readonly CURRENCIES = CURRENCIES;
+
   public readonly portfolios = this.portfoliosQuery.portfolios;
-  public readonly tickerValidator = tickerExistsValidator(this.stocksQuery);
 
   public readonly form = this.builder.group({
     /* eslint-disable @typescript-eslint/unbound-method */
-    id: null,
-    ticker: [null, Validators.required, this.tickerValidator],
-    amount: [null, [Validators.required, integerValidator()]],
-    price: [null, [Validators.required, Validators.min(0)]],
+    sourceCurrency: [null, Validators.required],
+    targetCurrency: [null, Validators.required],
+    amount: [null, Validators.required],
+    ratio: [null, [Validators.required, Validators.min(0)]],
     date: [new Date(), Validators.required],
     portfolio: [null, Validators.required],
-    comment: null,
     /* eslint-enable */
   });
 
-  public stocks!: Observable<Stock[]>;
-
   constructor(
-    private readonly builder: FormBuilder,
-    private readonly dialogRef: MatDialogRef<StockTransactionDialogComponent>,
-    private readonly stockService: StockService,
-    private readonly stocksQuery: StockQuery,
-    private readonly portfoliosQuery: StockPortfolioQuery,
     @Inject(MAT_DIALOG_DATA)
-    public readonly data: StockTransaction
+    public readonly data: ForexTransaction,
+    private readonly builder: FormBuilder,
+    private readonly dialogRef: MatDialogRef<ForexTransactionDialogComponent>,
+    private readonly portfoliosQuery: StockPortfolioQuery
   ) {
     super();
   }
 
   public ngOnInit(): void {
-    this.stockService.list();
-    this.stocks = this.handleTickerSearch();
-
     this.portfoliosQuery.selectedPortfolio
       .pipe(
         take(1),
@@ -94,22 +93,6 @@ export class StockTransactionDialogComponent
       return `Minimum ${allowed} is required.`;
     }
 
-    if (control.hasError('nonInteger')) {
-      return 'This field must be an integer.';
-    }
-
-    if (control.hasError('tickerNotExist')) {
-      return "This ticker doesn't exist.";
-    }
-
     return 'Unknown error.';
-  }
-
-  public handleTickerSearch(): Observable<Stock[]> {
-    return this.form.controls.ticker.valueChanges.pipe(
-      startWith<string>(''),
-      switchMap((filter: string) => this.stocksQuery.filteredStocks(filter)),
-      takeUntil(this.onDestroy)
-    );
   }
 }

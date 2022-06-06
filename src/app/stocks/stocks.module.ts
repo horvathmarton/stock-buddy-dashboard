@@ -8,18 +8,16 @@ import {
   StockDividendTableComponent,
   StockPnlTableComponent,
   StockRiskTable,
-  StockTransactionDialogComponent,
 } from './components';
 import { StocksRoutingModule } from './stocks-routing.module';
 import { PortfolioSummaryViewComponent } from './views';
 
-const VIEWS = [PortfolioSummaryViewComponent];
+const VIEWS = [PortfolioSummaryViewComponent, PortfolioSummaryViewComponent];
 const COMPONENTS = [
   BasicStockDataTable,
   StockRiskTable,
   StockDividendTableComponent,
   StockPnlTableComponent,
-  StockTransactionDialogComponent,
 ];
 
 @NgModule({
