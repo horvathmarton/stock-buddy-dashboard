@@ -1,4 +1,5 @@
 import { Component, Input } from '@angular/core';
+import { Currency } from '../../types';
 
 @Component({
   selector: 'sb-kpi',
@@ -14,4 +15,7 @@ export class KpiComponent {
 
   @Input()
   public type!: 'currency' | 'percentage';
+
+  @Input()
+  public currency: Currency = 'USD';
 }

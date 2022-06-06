@@ -1,0 +1,15 @@
+@import '../../../../variables';
+
+.form-field-row {
+    display: flex;
+}
+
+.form-field {
+    margin-right: $margin-size;
+    flex-grow: 1;
+}
+
+.actions {
+    display: flex;
+    justify-content: flex-end;
+}

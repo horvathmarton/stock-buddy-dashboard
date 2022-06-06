@@ -1,0 +1,65 @@
+<h1 mat-dialog-title>Create cash transaction</h1>
+<div mat-dialog-content>
+  <form [formGroup]="form">
+    <div class="form-field-row">
+      <mat-form-field appearance="outline" class="form-field">
+        <mat-label>Amount</mat-label>
+        <input
+          matInput
+          type="number"
+          formControlName="amount"
+          autocomplete="off"
+        />
+        <mat-error *ngIf="form.get('amount')?.invalid">{{
+          getErrorMessage(form.get("amount"))
+        }}</mat-error>
+      </mat-form-field>
+    </div>
+
+    <div class="form-field-row">
+      <mat-form-field appearance="outline" class="form-field">
+        <mat-label>Currency</mat-label>
+        <mat-select formControlName="currency">
+          <mat-option *ngFor="let currency of CURRENCIES" [value]="currency">{{
+            currency
+          }}</mat-option>
+        </mat-select>
+        <mat-error *ngIf="form.get('currency')?.invalid">{{
+          getErrorMessage(form.get("currency"))
+        }}</mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="form-field">
+        <mat-label>Portfolio</mat-label>
+        <mat-select formControlName="portfolio">
+          <mat-option
+            *ngFor="let portfolio of portfolios | async"
+            [value]="portfolio.id"
+            >{{ portfolio.name }}</mat-option
+          >
+        </mat-select>
+        <mat-error *ngIf="form.get('portfolio')?.invalid">{{
+          getErrorMessage(form.get("portfolio"))
+        }}</mat-error>
+      </mat-form-field>
+    </div>
+
+    <div class="form-field-row">
+      <mat-form-field appearance="outline" class="form-field">
+        <mat-label>Date</mat-label>
+        <input matInput [matDatepicker]="picker" formControlName="date" />
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+        <mat-error *ngIf="form.get('date')?.invalid">{{
+          getErrorMessage(form.get("date"))
+        }}</mat-error>
+      </mat-form-field>
+    </div>
+  </form>
+</div>
+<div mat-dialog-actions class="actions">
+  <button mat-button [mat-dialog-close]="">Cancel</button>
+  <button mat-button (click)="save()" color="primary" cdkFocusInitial>
+    Save
+  </button>
+</div>

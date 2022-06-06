@@ -3,27 +3,31 @@ import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MaterialModule } from '../core/material.module';
 import { SharedModule } from '../shared/shared.module';
+import { CashRoutingModule } from './cash-routing.module';
 import {
-  StrategyEditorDialogComponent,
-  StrategySelectorDialogComponent,
+  CashTransactionDialogComponent,
+  ForexTransactionDialogComponent,
+  StockTransactionDialogComponent,
+  TransactionTableComponent,
 } from './components';
-import { DashboardRoutingModule } from './dashboard-routing.module';
-import { DashboardViewComponent } from './views';
+import { CashViewComponent } from './views';
 
-const VIEWS = [DashboardViewComponent];
+const VIEWS = [CashViewComponent];
 const COMPONENTS = [
-  StrategyEditorDialogComponent,
-  StrategySelectorDialogComponent,
+  TransactionTableComponent,
+  StockTransactionDialogComponent,
+  CashTransactionDialogComponent,
+  ForexTransactionDialogComponent,
 ];
 
 @NgModule({
   imports: [
     CommonModule,
-    DashboardRoutingModule,
+    CashRoutingModule,
     SharedModule,
     MaterialModule,
     ReactiveFormsModule,
   ],
   declarations: [...VIEWS, ...COMPONENTS],
 })
-export class DashboardModule {}
+export class CashModule {}

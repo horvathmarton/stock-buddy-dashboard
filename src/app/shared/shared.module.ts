@@ -8,6 +8,7 @@ import {
   ConfirmationDialogComponent,
   ContentHeaderComponent,
   ErrorMessageComponent,
+  KpiComponent,
   PieChartComponent,
   ToggleableComponent,
   TreemapChartComponent,
@@ -22,6 +23,7 @@ const COMPONENTS = [
   ToggleableComponent,
   BasicEntityDialogComponent,
   ConfirmationDialogComponent,
+  KpiComponent,
 ];
 
 @NgModule({

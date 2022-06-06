@@ -1,7 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { EMPTY } from 'rxjs';
-import { catchError, finalize, tap } from 'rxjs/operators';
+import { catchError, finalize, pluck, tap } from 'rxjs/operators';
+import { ApiPaginationResponse } from 'src/app/shared/types';
 import { defaultCatchError } from 'src/app/shared/operators';
 import { ErrorResponse } from 'src/app/shared/types';
 import { Strategy } from '../interfaces';
@@ -22,8 +23,9 @@ export class StrategiesService {
     this.store.setLoading(true);
 
     this.http
-      .get<Strategy[]>(`/dashboard/strategies`)
+      .get<ApiPaginationResponse<Strategy>>(`/dashboard/strategies`)
       .pipe(
+        pluck('results'),
         tap((strategies) => this.store.set(strategies)),
         defaultCatchError(this.store),
         finalize(() => this.store.setLoading(false))
