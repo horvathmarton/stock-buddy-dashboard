@@ -7,16 +7,29 @@
 
   <ng-container matColumnDef="nextTargetPrice">
     <mat-header-cell *matHeaderCellDef mat-sort-header
-      >Next target price</mat-header-cell
+      >Closest target price</mat-header-cell
     >
-    <mat-cell *matCellDef="let row"> N/A </mat-cell>
+    <mat-cell *matCellDef="let row">
+      {{ ((targets | async)?.[row.ticker]?.targetPrice?.change | percent) ?? 'N/A' }}
+    </mat-cell>
   </ng-container>
 
-  <ng-container matColumnDef="nextPositionSizes">
+  <ng-container matColumnDef="nextPositionSize">
     <mat-header-cell *matHeaderCellDef mat-sort-header
       >Next position size</mat-header-cell
     >
-    <mat-cell *matCellDef="let row"> N/A </mat-cell>
+    <mat-cell *matCellDef="let row">
+      {{ ((targets | async)?.[row.ticker]?.positionSize?.change | percent) ?? 'N/A' }}
+    </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="nextPositionSizeAtCost">
+    <mat-header-cell *matHeaderCellDef mat-sort-header
+      >Next position size (@ cost)</mat-header-cell
+    >
+    <mat-cell *matCellDef="let row">
+      {{ ((targets | async)?.[row.ticker]?.positionSizeAtCost?.change | percent) ?? 'N/A' }}
+    </mat-cell>
   </ng-container>
 
   <ng-container matColumnDef="targetPrices">

@@ -8,12 +8,13 @@ import {
   DisposableComponent,
 } from 'src/app/shared/components';
 import { isDefined } from 'src/app/shared/utils';
+import { PortfolioService, StockService } from '../../../stocks/services';
 import {
   WatchlistItemEditorDialogComponent,
   WatchlistItemEditorDialogResult,
 } from '../../components';
 import { Watchlist, WatchlistItem, WatchlistListItem } from '../../interfaces';
-import { WatchlistService } from '../../services';
+import { TargetsService, WatchlistService } from '../../services';
 import { WatchlistQuery } from '../../state';
 
 @Component({
@@ -34,6 +35,10 @@ export class WatchlistViewComponent
     filter(isDefined),
     map((watchlist) => watchlist.items)
   );
+  public readonly watchlistTargets = this.query.details.pipe(
+    filter(isDefined),
+    switchMap((watchlist) => this.targetsService.nextTargets(watchlist))
+  );
 
   public readonly createItem = new Subject<null>();
   public readonly editItem = new Subject<string>();
@@ -49,7 +54,10 @@ export class WatchlistViewComponent
   constructor(
     public readonly query: WatchlistQuery,
     private readonly dialog: MatDialog,
-    private readonly watchlistService: WatchlistService
+    private readonly watchlistService: WatchlistService,
+    private readonly portfolioService: PortfolioService,
+    private readonly targetsService: TargetsService,
+    private readonly stockService: StockService
   ) {
     super();
   }
@@ -57,7 +65,9 @@ export class WatchlistViewComponent
   public ngOnInit(): void {
     this.initializeControls();
 
+    this.stockService.list();
     this.watchlistService.list();
+    this.portfolioService.summary();
 
     this.handleControlChanges();
     this.handleItemCreation();

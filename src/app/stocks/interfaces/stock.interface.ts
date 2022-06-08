@@ -10,4 +10,7 @@ export interface Stock {
 
   /** */
   sector: string;
+
+  /** */
+  price?: number;
 }
