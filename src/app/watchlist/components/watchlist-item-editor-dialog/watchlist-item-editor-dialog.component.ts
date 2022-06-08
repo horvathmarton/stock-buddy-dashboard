@@ -160,11 +160,11 @@ export class WatchlistItemEditorDialogComponent
   private populateForm(): void {
     this.form.patchValue(this.data.item);
 
-    this.data.item.target_prices.forEach(({ name, price }) => {
+    this.data.item?.target_prices.forEach(({ name, price }) => {
       this.addTargetPrice(name, price);
     });
 
-    this.data.item.position_sizes.forEach(({ name, size, at_cost }) =>
+    this.data.item?.position_sizes.forEach(({ name, size, at_cost }) =>
       this.addPositionSize(name, size, at_cost)
     );
   }

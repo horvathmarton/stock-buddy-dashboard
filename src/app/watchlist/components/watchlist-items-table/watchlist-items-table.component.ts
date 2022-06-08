@@ -2,6 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { map, Observable, Subject } from 'rxjs';
 import { WatchlistItem } from '../../interfaces';
+import { TargetsMap } from '../../services';
 
 @Component({
   selector: 'sb-watchlist-items-table',
@@ -12,7 +13,8 @@ export class WatchlistItemsTable implements OnInit {
   public readonly displayedColumns = [
     'ticker',
     'nextTargetPrice',
-    'nextPositionSizes',
+    'nextPositionSize',
+    'nextPositionSizeAtCost',
     'targetPrices',
     'positionSizes',
     'controls',
@@ -36,6 +38,9 @@ export class WatchlistItemsTable implements OnInit {
 
   @Input()
   public deleteItem!: Subject<string>;
+
+  @Input()
+  public targets!: Observable<TargetsMap>;
 
   public ngOnInit(): void {
     this.dataSource = this.watchlistItemsStream.pipe(
