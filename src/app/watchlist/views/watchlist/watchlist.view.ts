@@ -30,11 +30,6 @@ export class WatchlistViewComponent
 
   public readonly selectedWatchlist = new FormControl();
 
-  public readonly watchlist = this.query.details;
-  public readonly watchlistItems = this.query.details.pipe(
-    filter(isDefined),
-    map((watchlist) => watchlist.items)
-  );
   public readonly watchlistTargets = this.query.details.pipe(
     filter(isDefined),
     switchMap((watchlist) => this.targetsService.nextTargets(watchlist))

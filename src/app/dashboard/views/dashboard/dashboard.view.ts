@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { Router } from '@angular/router';
 import { combineLatest } from 'rxjs';
 import { filter, takeUntil, tap } from 'rxjs/operators';
 import { DisposableComponent } from 'src/app/shared/components';
@@ -40,6 +41,7 @@ export class DashboardViewComponent
   );
 
   constructor(
+    public readonly router: Router,
     private readonly dialog: MatDialog,
     private readonly errorService: ErrorService,
     private readonly strategiesQuery: StrategiesQuery,

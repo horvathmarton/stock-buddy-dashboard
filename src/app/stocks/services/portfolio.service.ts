@@ -27,9 +27,9 @@ export class PortfolioService {
         pluck('results'),
         tap((portfolios) => {
           this.store.set(portfolios);
-          this.store.setLoading(true);
         }),
-        defaultCatchError(this.store)
+        defaultCatchError(this.store),
+        finalize(() => this.store.setLoading(false))
       )
       .subscribe();
   }

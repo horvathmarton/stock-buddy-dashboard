@@ -57,7 +57,22 @@
 ></mat-progress-bar>
 
 <span
-  *ngIf="!(isLoading | async) && !(query.summary | async)"
+  *ngIf="!(isLoading | async) && !(query.hasPortfolios | async)"
+  class="mat-subheading-2 no-data"
+>
+  You have no portfolios.
+  <button
+    mat-flat-button
+    (click)="createPortfolio()"
+    color="primary"
+    class="cta-button"
+  >
+    Add the first portfolio
+  </button>
+</span>
+
+<span
+  *ngIf="!(isLoading | async) && (query.hasPortfolios | async) && !(query.summary | async)"
   class="mat-subheading-2 no-data"
 >
   This portfolio has no positions.
