@@ -40,10 +40,8 @@
   }
 }
 
-.error-message,
 .no-data {
-  height: 100%;
-  width: 100%;
+  height: calc(100% - 160px);
 
   display: flex;
   flex-direction: column;

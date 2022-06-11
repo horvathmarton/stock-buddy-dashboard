@@ -3,12 +3,14 @@
 .content-container {
   display: flex;
   
-  .chart-container {
+  .chart-container,
+  .kpi-container {
     display: flex;
-    margin: 0 $margin-size;
+    margin: 0 calc(2 * $margin-size);
     height: calc(100vh - 160px);
+  }
 
-  
+  .chart-container {
     .strategy-controls {
       display: flex;
       flex-direction: column;
@@ -17,25 +19,29 @@
         margin-bottom: calc($margin-size / 4);
       }
     }
-
-    .no-data {
-      width: 95%;
-      margin: auto;
-      display: block;
-      text-align: center;
-    }
   }
   
   .kpi-container {
-    display: flex;
+    flex-grow: 1;
     flex-wrap: wrap;
-    margin: 0 $margin-size;
+    align-items: center;
     justify-content: center;
     align-content: flex-start;
   
     .kpi {
       width: 250px;
       margin: 0 $margin-size $margin-size 0;
+    }
+  }
+
+  .no-data {
+    display: flex;
+    flex-flow: column;
+    align-items: center;
+    margin-top: calc(50vh - 160px);
+
+    .cta-button {
+      margin-top: calc($margin-size / 2);
     }
   }
 }

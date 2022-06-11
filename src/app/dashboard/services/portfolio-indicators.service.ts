@@ -1,9 +1,10 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { finalize, tap } from 'rxjs/operators';
+import { EMPTY } from 'rxjs';
+import { catchError, finalize, tap } from 'rxjs/operators';
+import { ErrorResponse } from 'src/app/shared/types';
 import { PortfolioIndicators } from '../interfaces';
 import { PortfolioIndicatorsStore } from '../state';
-import { defaultCatchError } from '../../shared/operators';
 
 @Injectable({ providedIn: 'root' })
 export class PortfolioIndicatorsService {
@@ -19,7 +20,15 @@ export class PortfolioIndicatorsService {
       .get<PortfolioIndicators>(`/dashboard/portfolio-indicators`)
       .pipe(
         tap((indicators) => void this.store.update({ indicators })),
-        defaultCatchError(this.store),
+        catchError((errorResponse: ErrorResponse) => {
+          if (errorResponse.status === 404) {
+            this.store.update({ indicators: null });
+          } else {
+            this.store.setError(errorResponse.error);
+          }
+
+          return EMPTY;
+        }),
         finalize(() => this.store.setLoading(false))
       )
       .subscribe();

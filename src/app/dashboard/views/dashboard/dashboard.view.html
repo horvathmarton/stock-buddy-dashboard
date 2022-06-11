@@ -1,13 +1,13 @@
 <sb-content-header title="Dashboard"></sb-content-header>
 
 <mat-progress-bar
-  *ngIf="(isLoading | async)"
+  *ngIf="isLoading | async"
   mode="indeterminate"
 ></mat-progress-bar>
 
 <div class="content-container">
   <div class="chart-container">
-    <div class="strategy-controls">
+    <div *ngIf="currentStrategy" class="strategy-controls">
       <button
         mat-fab
         (click)="createStrategy($event)"
@@ -29,7 +29,15 @@
     <span
       *ngIf="!(isLoading | async) && !currentStrategy"
       class="mat-subheading-2 no-data"
-      >Please select a target strategy.</span
+      >You have no strategy target.
+      <button
+        mat-flat-button
+        (click)="selectStrategy($event)"
+        color="primary"
+        class="cta-button"
+      >
+        Select strategy
+      </button></span
     >
 
     <div>
@@ -52,6 +60,18 @@
   </div>
 
   <div class="kpi-container">
+    <span *ngIf="!(indicators | async)" class="no-data">
+      You have no portfolios handled within Stock Buddy.
+      <button
+        mat-flat-button
+        (click)="router.navigate(['/', 'portfolio'])"
+        color="primary"
+        class="cta-button"
+      >
+        Create my first account
+      </button>
+    </span>
+
     <sb-kpi
       *ngIf="indicators | async"
       name="Total AUM"

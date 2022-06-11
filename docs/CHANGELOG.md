@@ -18,6 +18,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add `roic_since_inception` and `total_floating_pnl` KPIs to the dashboard.
 - Cash view.
 - Add cash, forex and stock transaction flow.
+- Show next target information on the watchlist table.
+- Show help message on empty views.
 
 ## [1.1.0] - 2022-04-19
 

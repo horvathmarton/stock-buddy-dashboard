@@ -23,6 +23,20 @@
   margin: $margin-size;
 }
 
+.no-data {
+  height: calc(100% - 160px);
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin: 0 $margin-size;
+
+  .cta-button {
+    margin-top: $margin-size;
+  }
+}
+
 ::ng-deep span.mat-option-text {
   display: flex;
   justify-content: space-between;
