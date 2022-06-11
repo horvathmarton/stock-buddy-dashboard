@@ -1,7 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { format } from 'date-fns';
-import { tap } from 'rxjs';
+import { finalize, tap } from 'rxjs';
+import { defaultCatchError } from 'src/app/shared/operators';
 import { CashBalance } from '../interfaces';
 import { CashStore } from '../state';
 
@@ -27,7 +28,9 @@ export class CashService {
           } else {
             this.store.upsert(id, balance);
           }
-        })
+        }),
+        defaultCatchError(this.store),
+        finalize(() => this.store.setLoading(false))
       )
       .subscribe();
   }

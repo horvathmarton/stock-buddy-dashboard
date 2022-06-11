@@ -1,7 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { combineLatest } from 'rxjs';
-import { filter, map, tap } from 'rxjs/operators';
+import { filter, takeUntil, tap } from 'rxjs/operators';
+import { DisposableComponent } from 'src/app/shared/components';
+import { some } from 'src/app/shared/operators';
+import { ErrorService } from 'src/app/shared/services';
 import { isDefined } from 'src/app/shared/utils';
 import {
   StrategyEditorDialogComponent,
@@ -15,7 +18,10 @@ import { PortfolioIndicatorsQuery, StrategiesQuery } from '../../state';
   templateUrl: './dashboard.view.html',
   styleUrls: ['./dashboard.view.scss'],
 })
-export class DashboardViewComponent implements OnInit {
+export class DashboardViewComponent
+  extends DisposableComponent
+  implements OnInit
+{
   private readonly DIALOG_BASE_CONFIG = {
     minWidth: '400px',
     width: '70vw',
@@ -25,9 +31,7 @@ export class DashboardViewComponent implements OnInit {
   public readonly isLoading = combineLatest([
     this.strategiesQuery.selectLoading(),
     this.portfolioIndicatorsQuery.selectLoading(),
-  ]).pipe(map(([strategies, indicators]) => strategies || indicators));
-  public readonly strategyError = this.strategiesQuery.selectError();
-  public readonly indicatorsError = this.portfolioIndicatorsQuery.selectError();
+  ]).pipe(some());
 
   public currentStrategy!: Record<string, number>;
   public targetStrategy!: Record<string, number>;
@@ -36,12 +40,15 @@ export class DashboardViewComponent implements OnInit {
   );
 
   constructor(
-    private readonly dashboardService: StrategiesService,
-    private readonly portfolioIndicatorsService: PortfolioIndicatorsService,
+    private readonly dialog: MatDialog,
+    private readonly errorService: ErrorService,
     private readonly strategiesQuery: StrategiesQuery,
+    private readonly dashboardService: StrategiesService,
     private readonly portfolioIndicatorsQuery: PortfolioIndicatorsQuery,
-    private readonly dialog: MatDialog
-  ) {}
+    private readonly portfolioIndicatorsService: PortfolioIndicatorsService
+  ) {
+    super();
+  }
 
   public ngOnInit(): void {
     this.dashboardService.fetchMyStrategy();
@@ -55,6 +62,14 @@ export class DashboardViewComponent implements OnInit {
           this.targetStrategy = this.transformStrategyItems(strategy.target);
         })
       )
+      .subscribe();
+
+    this.errorService
+      .showErrors(
+        this.strategiesQuery.selectError(),
+        this.portfolioIndicatorsQuery.selectError()
+      )
+      .pipe(takeUntil(this.onDestroy))
       .subscribe();
   }
 

@@ -7,6 +7,7 @@ import {
   ConfirmationDialogComponent,
   DisposableComponent,
 } from 'src/app/shared/components';
+import { ErrorService } from 'src/app/shared/services';
 import { isDefined } from 'src/app/shared/utils';
 import { PortfolioService, StockService } from '../../../stocks/services';
 import {
@@ -26,7 +27,6 @@ export class WatchlistViewComponent
   implements OnInit
 {
   public readonly isLoading = this.query.selectLoading();
-  public readonly error = this.query.selectError();
 
   public readonly selectedWatchlist = new FormControl();
 
@@ -54,10 +54,11 @@ export class WatchlistViewComponent
   constructor(
     public readonly query: WatchlistQuery,
     private readonly dialog: MatDialog,
-    private readonly watchlistService: WatchlistService,
-    private readonly portfolioService: PortfolioService,
+    private readonly stockService: StockService,
+    private readonly errorService: ErrorService,
     private readonly targetsService: TargetsService,
-    private readonly stockService: StockService
+    private readonly watchlistService: WatchlistService,
+    private readonly portfolioService: PortfolioService
   ) {
     super();
   }
@@ -73,6 +74,11 @@ export class WatchlistViewComponent
     this.handleItemCreation();
     this.handleItemEdition();
     this.handleItemDeletion();
+
+    this.errorService
+      .showErrors(this.query.selectError())
+      .pipe(takeUntil(this.onDestroy))
+      .subscribe();
   }
 
   public createWatchlist(): void {

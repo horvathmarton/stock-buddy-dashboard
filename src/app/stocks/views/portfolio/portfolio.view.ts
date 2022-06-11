@@ -19,6 +19,7 @@ import {
   BasicEntityDialogComponent,
   DisposableComponent,
 } from 'src/app/shared/components';
+import { ErrorService } from 'src/app/shared/services';
 import { isDefined } from 'src/app/shared/utils';
 import {
   StockPortfolio,
@@ -51,7 +52,6 @@ export class PortfolioSummaryViewComponent
   } as unknown as StockPortfolio;
 
   public readonly isLoading = this.query.selectLoading();
-  public readonly error = this.query.selectError();
   public readonly createTransaction = new Subject<string | null>();
   public readonly controls = this.builder.group({
     /* eslint-disable @typescript-eslint/unbound-method */
@@ -76,6 +76,7 @@ export class PortfolioSummaryViewComponent
     private readonly dialog: MatDialog,
     private readonly builder: FormBuilder,
     private readonly route: ActivatedRoute,
+    private readonly errorService: ErrorService,
     private readonly stockPortfolioService: PortfolioService,
     private readonly transactionsService: TransactionsService
   ) {
@@ -89,6 +90,11 @@ export class PortfolioSummaryViewComponent
     this.handleSummaryChanges();
     this.initializeControls();
     this.handleTransactionCreation();
+
+    this.errorService
+      .showErrors(this.query.selectError())
+      .pipe(takeUntil(this.onDestroy))
+      .subscribe();
   }
 
   public createPortfolio(): void {

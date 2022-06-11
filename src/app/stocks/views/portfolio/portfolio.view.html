@@ -2,7 +2,7 @@
   <sb-content-header title="Portfolio summary"> </sb-content-header>
   <span class="divider"></span>
   <form
-    *ngIf="!(isLoading | async) && !(error | async)"
+    *ngIf="!(isLoading | async)"
     [formGroup]="controls"
     class="control-form"
   >
@@ -51,17 +51,13 @@
   </form>
 </div>
 
-<sb-error-message *ngIf="error | async" class="error-message"
-  >An error occurred while fetching the portfolio data.</sb-error-message
->
-
 <mat-progress-bar
-  *ngIf="!(error | async) && (isLoading | async)"
+  *ngIf="(isLoading | async)"
   mode="indeterminate"
 ></mat-progress-bar>
 
 <span
-  *ngIf="!(isLoading | async) && !(error | async) && !(query.summary | async)"
+  *ngIf="!(isLoading | async) && !(query.summary | async)"
   class="mat-subheading-2 no-data"
 >
   This portfolio has no positions.
@@ -76,7 +72,7 @@
 </span>
 
 <mat-tab-group
-  *ngIf="!(isLoading | async) && !(error | async) && (query.summary | async)"
+  *ngIf="!(isLoading | async) && (query.summary | async)"
   mat-align-tabs="start"
   animationDuration="0ms"
   class="tab-group"

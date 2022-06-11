@@ -1,5 +1,10 @@
 <sb-content-header title="Cash"></sb-content-header>
 
+<mat-progress-bar
+  *ngIf="(isLoading | async)"
+  mode="indeterminate"
+></mat-progress-bar>
+
 <div class="content">
   <div class="balance">
     <div *ngIf="cashQuery.total | async; let balance; else spinner">
