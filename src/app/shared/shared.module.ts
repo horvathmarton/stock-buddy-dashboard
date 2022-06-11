@@ -7,7 +7,6 @@ import {
   BasicEntityDialogComponent,
   ConfirmationDialogComponent,
   ContentHeaderComponent,
-  ErrorMessageComponent,
   KpiComponent,
   PieChartComponent,
   ToggleableComponent,
@@ -16,7 +15,6 @@ import {
 
 const COMPONENTS = [
   ContentHeaderComponent,
-  ErrorMessageComponent,
   BarChartComponent,
   PieChartComponent,
   TreemapChartComponent,

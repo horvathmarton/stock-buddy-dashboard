@@ -1,8 +1,18 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { isDefined } from '@datorama/akita';
-import { filter, map, Subject, switchMap, takeUntil, tap } from 'rxjs';
+import {
+  combineLatest,
+  filter,
+  map,
+  Subject,
+  switchMap,
+  takeUntil,
+  tap,
+} from 'rxjs';
 import { DisposableComponent } from 'src/app/shared/components';
+import { some } from 'src/app/shared/operators';
+import { ErrorService } from 'src/app/shared/services';
 import { StockTransaction } from 'src/app/stocks/interfaces';
 import { PortfolioService } from 'src/app/stocks/services';
 import {
@@ -33,6 +43,11 @@ export class CashViewComponent extends DisposableComponent implements OnInit {
   public readonly createForexTransaction = new Subject<null>();
   public readonly createStockTransaction = new Subject<null>();
 
+  public readonly isLoading = combineLatest([
+    this.cashQuery.selectLoading(),
+    this.transactionsQuery.selectLoading(),
+  ]).pipe(tap(console.log), some());
+
   private readonly DIALOG_BASE_CONFIG = {
     minHeight: '300px',
     minWidth: '400px',
@@ -45,8 +60,9 @@ export class CashViewComponent extends DisposableComponent implements OnInit {
     public readonly transactionsQuery: TransactionsQuery,
     private readonly dialog: MatDialog,
     private readonly cashService: CashService,
-    private readonly transactionsService: TransactionsService,
-    private readonly portfolioService: PortfolioService
+    private readonly errorService: ErrorService,
+    private readonly portfolioService: PortfolioService,
+    private readonly transactionsService: TransactionsService
   ) {
     super();
   }
@@ -57,6 +73,14 @@ export class CashViewComponent extends DisposableComponent implements OnInit {
     this.transactionsService.list();
     this.cashService.fetch();
     this.portfolioService.list();
+
+    this.errorService
+      .showErrors(
+        this.cashQuery.selectError(),
+        this.transactionsQuery.selectError()
+      )
+      .pipe(takeUntil(this.onDestroy))
+      .subscribe();
   }
 
   private handleTransactionCreation(): void {

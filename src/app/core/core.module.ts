@@ -16,9 +16,17 @@ import { AuthGuard } from './guards';
 import { BaseUrlInterceptor, UnauthenticatedInterceptor } from './interceptors';
 import { AuthenticateInterceptor } from './interceptors/authenticate.interceptor';
 import { MaterialModule } from './material.module';
-import { AppViewComponent, NotFoundViewComponent } from './views';
+import {
+  AppViewComponent,
+  NoConnectionViewComponent,
+  NotFoundViewComponent,
+} from './views';
 
-const VIEWS = [AppViewComponent, NotFoundViewComponent];
+const VIEWS = [
+  AppViewComponent,
+  NotFoundViewComponent,
+  NoConnectionViewComponent,
+];
 const COMPONENTS = [
   DarkModeToggleComponent,
   ToolbarComponent,

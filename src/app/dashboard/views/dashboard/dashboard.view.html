@@ -7,20 +7,7 @@
 
 <div class="content-container">
   <div class="chart-container">
-    <sb-error-message *ngIf="strategyError | async" class="error-message">
-      An error occurred while fetching user strategy.
-    </sb-error-message>
-
-    <span
-      *ngIf="!(isLoading | async) && !(strategyError | async) && !currentStrategy"
-      class="mat-subheading-2 no-data"
-      >Please select a target strategy.</span
-    >
-
-    <div
-      *ngIf="!(strategyError | async) && targetStrategy"
-      class="strategy-controls"
-    >
+    <div class="strategy-controls">
       <button
         mat-fab
         (click)="createStrategy($event)"
@@ -38,16 +25,23 @@
         <mat-icon>list</mat-icon>
       </button>
     </div>
+
+    <span
+      *ngIf="!(isLoading | async) && !currentStrategy"
+      class="mat-subheading-2 no-data"
+      >Please select a target strategy.</span
+    >
+
     <div>
       <sb-pie-chart
-        *ngIf="!(strategyError | async) && currentStrategy"
+        *ngIf="currentStrategy"
         title="Current strategy"
         [data]="currentStrategy"
         [width]="300"
         [height]="300"
       ></sb-pie-chart>
       <sb-pie-chart
-        *ngIf="!(strategyError | async) && targetStrategy"
+        *ngIf="targetStrategy"
         title="Target strategy"
         [data]="targetStrategy"
         [width]="300"
@@ -58,40 +52,36 @@
   </div>
 
   <div class="kpi-container">
-    <sb-error-message *ngIf="indicatorsError | async" class="error-message">
-      An error occurred while fetching portfolio indicators.
-    </sb-error-message>
-
     <sb-kpi
-      *ngIf="!(indicatorsError | async) && (indicators | async)"
+      *ngIf="indicators | async"
       name="Total AUM"
       [value]="(indicators | async)!.total_aum"
       type="currency"
       class="kpi"
     ></sb-kpi>
     <sb-kpi
-      *ngIf="!(indicatorsError | async) && (indicators | async)"
+      *ngIf="indicators | async"
       name="PnL"
       [value]="(indicators | async)!.total_floating_pnl"
       type="currency"
       class="kpi"
     ></sb-kpi>
     <sb-kpi
-      *ngIf="!(indicatorsError | async) && (indicators | async)"
+      *ngIf="indicators | async"
       name="Dividend income"
       [value]="(indicators | async)!.annual_dividend_income"
       type="currency"
       class="kpi"
     ></sb-kpi>
     <sb-kpi
-      *ngIf="!(indicatorsError | async) && (indicators | async)"
+      *ngIf="indicators | async"
       name="ROIC"
       [value]="(indicators | async)!.roic_since_inception"
       type="percentage"
       class="kpi"
     ></sb-kpi>
     <sb-kpi
-      *ngIf="!(indicatorsError | async) && (indicators | async)"
+      *ngIf="indicators | async"
       name="Annualized ROIC"
       [value]="(indicators | async)!.annualized_roic"
       type="percentage"

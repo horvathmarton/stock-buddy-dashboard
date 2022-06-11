@@ -78,8 +78,6 @@ export class WatchlistItemEditorDialogComponent
     this.form.markAllAsTouched();
 
     if (this.form.invalid) {
-      console.log(this.form);
-
       return;
     }
 

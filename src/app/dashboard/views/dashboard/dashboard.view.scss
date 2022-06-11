@@ -2,39 +2,40 @@
 
 .content-container {
   display: flex;
-}
-
-.error-message,
-.no-data {
-  display: block;
-  width: 95%;
-  margin: auto;
-  text-align: center;
-}
-
-.chart-container {
-  display: flex;
-  margin-left: $margin-size;
-
-  .strategy-controls {
+  
+  .chart-container {
     display: flex;
-    flex-direction: column;
+    margin: 0 $margin-size;
+    height: calc(100vh - 160px);
 
-    .strategy-control {
-      margin-bottom: calc($margin-size / 4);
+  
+    .strategy-controls {
+      display: flex;
+      flex-direction: column;
+  
+      .strategy-control {
+        margin-bottom: calc($margin-size / 4);
+      }
+    }
+
+    .no-data {
+      width: 95%;
+      margin: auto;
+      display: block;
+      text-align: center;
     }
   }
-}
-
-.kpi-container {
-  width: 100%;
-  display: flex;
-  flex-wrap: wrap;
-  align-content: flex-start;
-  justify-content: center;
-
-  .kpi {
-    width: 250px;
-    margin: 0 $margin-size $margin-size 0;
+  
+  .kpi-container {
+    display: flex;
+    flex-wrap: wrap;
+    margin: 0 $margin-size;
+    justify-content: center;
+    align-content: flex-start;
+  
+    .kpi {
+      width: 250px;
+      margin: 0 $margin-size $margin-size 0;
+    }
   }
 }

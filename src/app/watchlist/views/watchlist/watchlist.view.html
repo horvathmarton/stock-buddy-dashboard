@@ -1,7 +1,7 @@
 <div class="header">
   <sb-content-header title="Watchlist"></sb-content-header>
   <span class="divider"></span>
-  <div *ngIf="!(isLoading | async) && !(error | async)" class="control-form">
+  <div *ngIf="!(isLoading | async)" class="control-form">
     <mat-form-field appearance="outline" class="control-field">
       <mat-label>Watchlist</mat-label>
       <mat-select [formControl]="selectedWatchlist" #select>
@@ -39,12 +39,8 @@
   </div>
 </div>
 
-<sb-error-message *ngIf="error | async" class="error-message"
-  >An error occurred while fetching the watchlist data.</sb-error-message
->
-
 <mat-progress-bar
-  *ngIf="!(error | async) && (isLoading | async)"
+  *ngIf="(isLoading | async)"
   mode="indeterminate"
 ></mat-progress-bar>
 

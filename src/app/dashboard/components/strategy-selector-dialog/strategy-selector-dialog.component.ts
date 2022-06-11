@@ -11,7 +11,6 @@ import { StrategiesQuery } from '../../state';
 export class StrategySelectorDialogComponent implements OnInit {
   public readonly displayedColumns = ['name'];
   public readonly isLoading = this.strategiesQuery.selectLoading();
-  public readonly error = this.strategiesQuery.selectError();
   public readonly strategies = this.strategiesQuery.strategies;
 
   constructor(

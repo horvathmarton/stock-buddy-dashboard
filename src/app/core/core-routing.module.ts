@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AuthGuard } from './guards';
-import { NotFoundViewComponent } from './views';
+import { NoConnectionViewComponent, NotFoundViewComponent } from './views';
 
 const routes: Routes = [
   {
@@ -35,6 +35,10 @@ const routes: Routes = [
     path: 'cash',
     canActivate: [AuthGuard],
     loadChildren: () => import('../cash/cash.module').then((m) => m.CashModule),
+  },
+  {
+    path: 'no-connection',
+    component: NoConnectionViewComponent,
   },
   {
     path: '**',
