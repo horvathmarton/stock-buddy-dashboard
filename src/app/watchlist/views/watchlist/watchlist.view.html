@@ -1,7 +1,10 @@
 <div class="header">
   <sb-content-header title="Watchlist"></sb-content-header>
   <span class="divider"></span>
-  <div *ngIf="!(isLoading | async)" class="control-form">
+  <div
+    *ngIf="!(isLoading | async) && (query.hasWatchlists | async)"
+    class="control-form"
+  >
     <mat-form-field appearance="outline" class="control-field">
       <mat-label>Watchlist</mat-label>
       <mat-select [formControl]="selectedWatchlist" #select>
@@ -44,10 +47,40 @@
   mode="indeterminate"
 ></mat-progress-bar>
 
+<span
+  *ngIf="!(isLoading | async) && !(query.hasWatchlists | async)"
+  class="mat-subheading-2 no-data"
+>
+  You have no watchlists.
+  <button
+    mat-flat-button
+    (click)="createWatchlist()"
+    color="primary"
+    class="cta-button"
+  >
+    Add the first watchlist
+  </button>
+</span>
+
+<span
+  *ngIf="!(isLoading | async) && (query.hasWatchlists | async) && !(query.hasWatchlistItems | async)"
+  class="mat-subheading-2 no-data"
+>
+  You have no watchlists.
+  <button
+    mat-flat-button
+    (click)="createItem.next(null)"
+    color="primary"
+    class="cta-button"
+  >
+    Add the first watchlist
+  </button>
+</span>
+
 <div class="content">
   <sb-watchlist-items-table
-    *ngIf="watchlistItems | async"
-    [watchlistItemsStream]="watchlistItems"
+    *ngIf="(query.hasWatchlists | async) && (query.hasWatchlistItems | async)"
+    [watchlistItemsStream]="query.watchlistItems"
     [createItem]="createItem"
     [editItem]="editItem"
     [deleteItem]="deleteItem"
