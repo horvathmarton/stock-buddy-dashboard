@@ -8,8 +8,9 @@ import {
   Validators,
 } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { Observable, startWith, switchMap, takeUntil } from 'rxjs';
+import { filter, Observable, startWith, switchMap, takeUntil } from 'rxjs';
 import { DisposableComponent } from 'src/app/shared/components';
+import { isDefined } from 'src/app/shared/utils';
 import { uniqueItem } from 'src/app/shared/validators';
 import { Stock } from 'src/app/stocks/interfaces';
 import { StockService } from 'src/app/stocks/services';
@@ -32,16 +33,13 @@ export interface WatchlistItemEditorDialogResult {
 })
 export class WatchlistItemEditorDialogComponent
   extends DisposableComponent
-  implements OnInit
-{
+  implements OnInit {
   public mode!: 'create' | 'edit';
 
   public readonly form = this.builder.group({
-    /* eslint-disable @typescript-eslint/unbound-method */
-    ticker: [null, Validators.required],
+    ticker: new FormControl<string | null>(null, Validators.required),
     targetPrices: this.builder.array([], [uniqueItem()]),
     positionSizes: this.builder.array([], [uniqueItem()]),
-    /* eslint-disable */
   });
 
   public stocks!: Observable<Stock[]>;
@@ -100,8 +98,8 @@ export class WatchlistItemEditorDialogComponent
   public addPositionSize(name?: string, size?: number, atCost?: boolean): void {
     this.positionSizes.push(
       this.builder.group({
-        name: [name ?? null, Validators.required],
-        size: [size ?? null, [Validators.required, Validators.min(0)]],
+        name: new FormControl<string | null>(name ?? null, Validators.required),
+        size: new FormControl<number | null>(size ?? null, [Validators.required, Validators.min(0)]),
         atCost: [atCost ?? true, Validators.required],
       })
     );
@@ -123,7 +121,8 @@ export class WatchlistItemEditorDialogComponent
 
   public handleTickerSearch(): Observable<Stock[]> {
     return this.form.controls.ticker.valueChanges.pipe(
-      startWith<string>(''),
+      filter(isDefined),
+      startWith(''),
       switchMap((filter: string) => this.stocksQuery.filteredStocks(filter)),
       takeUntil(this.onDestroy)
     );

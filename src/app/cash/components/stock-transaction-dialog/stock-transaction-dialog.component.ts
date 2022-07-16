@@ -1,10 +1,11 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { AbstractControl, FormBuilder, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormControl, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { format } from 'date-fns';
 import { Observable } from 'rxjs';
-import { startWith, switchMap, take, takeUntil, tap } from 'rxjs/operators';
+import { filter, startWith, switchMap, take, takeUntil, tap } from 'rxjs/operators';
 import { DisposableComponent } from 'src/app/shared/components';
+import { isDefined } from 'src/app/shared/utils';
 import {
   integerValidator,
   tickerExistsValidator,
@@ -23,21 +24,18 @@ import { StockPortfolioQuery, StockQuery } from '../../../stocks/state';
 })
 export class StockTransactionDialogComponent
   extends DisposableComponent
-  implements OnInit
-{
+  implements OnInit {
   public readonly portfolios = this.portfoliosQuery.portfolios;
   public readonly tickerValidator = tickerExistsValidator(this.stocksQuery);
 
   public readonly form = this.builder.group({
-    /* eslint-disable @typescript-eslint/unbound-method */
-    id: null,
-    ticker: [null, Validators.required, this.tickerValidator],
-    amount: [null, [Validators.required, integerValidator()]],
-    price: [null, [Validators.required, Validators.min(0)]],
-    date: [new Date(), Validators.required],
-    portfolio: [null, Validators.required],
-    comment: null,
-    /* eslint-enable */
+    id: new FormControl<number | null>(null),
+    ticker: new FormControl<string | null>(null, Validators.required, this.tickerValidator),
+    amount: new FormControl<number | null>(null, [Validators.required, integerValidator()]),
+    price: new FormControl<number | null>(null, [Validators.required, Validators.min(0)]),
+    date: new Date(),
+    portfolio: new FormControl<number | null>(null, Validators.required),
+    comment: new FormControl<string | null>(null),
   });
 
   public stocks!: Observable<Stock[]>;
@@ -62,10 +60,10 @@ export class StockTransactionDialogComponent
       .pipe(
         take(1),
         tap((portfolio: StockPortfolio | undefined) => {
+          this.form.patchValue({ ...this.data, date: new Date(this.data.date) })
+
           if (portfolio) {
-            this.form.patchValue({ ...this.data, portfolio: portfolio.id });
-          } else {
-            this.form.patchValue(this.data);
+            this.form.patchValue({ portfolio: portfolio.id });
           }
         })
       )
@@ -88,9 +86,7 @@ export class StockTransactionDialogComponent
   public getErrorMessage(control: AbstractControl | null): string {
     if (control === null) return 'Unknown error.';
 
-    if (control.hasError('required')) {
-      return 'This field is required.';
-    }
+    if (control.hasError('required')) return 'This field is required.';
 
     if (control.hasError('min')) {
       const allowed = (control.getError('min') as { min: number }).min;
@@ -98,20 +94,17 @@ export class StockTransactionDialogComponent
       return `Minimum ${allowed} is required.`;
     }
 
-    if (control.hasError('nonInteger')) {
-      return 'This field must be an integer.';
-    }
+    if (control.hasError('nonInteger')) return 'This field must be an integer.';
 
-    if (control.hasError('tickerNotExist')) {
-      return "This ticker doesn't exist.";
-    }
+    if (control.hasError('tickerNotExist')) return "This ticker doesn't exist.";
 
     return 'Unknown error.';
   }
 
   public handleTickerSearch(): Observable<Stock[]> {
     return this.form.controls.ticker.valueChanges.pipe(
-      startWith<string>(''),
+      filter(isDefined),
+      startWith(''),
       switchMap((filter: string) => this.stocksQuery.filteredStocks(filter)),
       takeUntil(this.onDestroy)
     );
