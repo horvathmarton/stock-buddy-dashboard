@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { AbstractControl, FormBuilder, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormControl, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { format } from 'date-fns';
 import { take, tap } from 'rxjs';
@@ -25,21 +25,18 @@ export interface ForexTransactionDialogResult {
 })
 export class ForexTransactionDialogComponent
   extends DisposableComponent
-  implements OnInit
-{
+  implements OnInit {
   public readonly CURRENCIES = CURRENCIES;
 
   public readonly portfolios = this.portfoliosQuery.portfolios;
 
   public readonly form = this.builder.group({
-    /* eslint-disable @typescript-eslint/unbound-method */
-    sourceCurrency: [null, Validators.required],
-    targetCurrency: [null, Validators.required],
-    amount: [null, Validators.required],
-    ratio: [null, [Validators.required, Validators.min(0)]],
-    date: [new Date(), Validators.required],
-    portfolio: [null, Validators.required],
-    /* eslint-enable */
+    sourceCurrency: new FormControl<Currency | null>(null, Validators.required),
+    targetCurrency: new FormControl<Currency | null>(null, Validators.required),
+    amount: new FormControl<number | null>(null, Validators.required),
+    ratio: new FormControl<number | null>(null, [Validators.required, Validators.min(0)]),
+    date: new Date(),
+    portfolio: new FormControl<number | null>(null, Validators.required),
   });
 
   constructor(
@@ -57,10 +54,10 @@ export class ForexTransactionDialogComponent
       .pipe(
         take(1),
         tap((portfolio: StockPortfolio | undefined) => {
+          this.form.patchValue({ ...this.data, date: new Date(this.data.date) })
+
           if (portfolio) {
-            this.form.patchValue({ ...this.data, portfolio: portfolio.id });
-          } else {
-            this.form.patchValue(this.data);
+            this.form.patchValue({ portfolio: portfolio.id });
           }
         })
       )

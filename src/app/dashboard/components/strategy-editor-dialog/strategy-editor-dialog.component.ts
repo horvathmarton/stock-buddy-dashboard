@@ -19,14 +19,11 @@ import { strategySum } from '../../validators';
 })
 export class StrategyEditorDialogComponent
   extends DisposableComponent
-  implements OnInit
-{
+  implements OnInit {
   public readonly ASSET_TYPES = ASSET_TYPES;
   public readonly form = this.builder.group({
-    /* eslint-disable @typescript-eslint/unbound-method */
     name: [null, Validators.required],
     items: this.builder.array([], [uniqueItem(), strategySum()]),
-    /* eslint-enable */
   });
 
   public get strategyItems(): FormArray {
@@ -65,7 +62,6 @@ export class StrategyEditorDialogComponent
   }
 
   public addStrategyItem(name?: string, size?: number): void {
-    /* eslint-disable @typescript-eslint/unbound-method */
     this.strategyItems.push(
       this.builder.group({
         name: [name ?? null, Validators.required],
@@ -75,7 +71,6 @@ export class StrategyEditorDialogComponent
         ],
       })
     );
-    /* eslint-enable */
   }
 
   public removeStrategyItem(index: number): void {

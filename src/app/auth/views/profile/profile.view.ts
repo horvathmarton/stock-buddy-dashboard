@@ -1,10 +1,9 @@
 import { Component } from '@angular/core';
-import { AbstractControl, FormBuilder, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormControl, Validators } from '@angular/forms';
 import { EMPTY } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
 import { CoreService } from 'src/app/core/services';
 import { AuthService } from '../../services';
-import { PasswordChangeFormValues } from '../../types';
 import { passwordConfirmMatch } from '../../validators';
 import packageInfo from '../../../../../package.json';
 
@@ -22,12 +21,10 @@ export class ProfileViewComponent {
     commit: packageInfo.commit,
   };
 
-  public readonly form = this.builder.group(
+  public readonly form = this.builder.nonNullable.group(
     {
-      /* eslint-disable @typescript-eslint/unbound-method */
-      password: [null, Validators.required],
-      passwordConfirmation: [null, Validators.required],
-      /* eslint-enable */
+      password: new FormControl<string | null>(null, Validators.required),
+      passwordConfirmation: new FormControl<string | null>(null, Validators.required),
     },
     { validators: [passwordConfirmMatch()] }
   );
@@ -36,13 +33,15 @@ export class ProfileViewComponent {
     private readonly auth: AuthService,
     private readonly builder: FormBuilder,
     private readonly coreService: CoreService
-  ) {}
+  ) { }
 
   public changePassword(): void {
-    if (this.form.invalid) return;
+    const { password } = this.form.value;
+
+    if (this.form.invalid || !password) return;
 
     this.auth
-      .changePassword((this.form.value as PasswordChangeFormValues).password)
+      .changePassword(password)
       .pipe(
         tap(() => (this.message = 'Password changed successfully.')),
         catchError(() => {
@@ -57,21 +56,15 @@ export class ProfileViewComponent {
   public getErrorMessage(control: AbstractControl | null): string {
     if (control === null) return 'Unknown error.';
 
-    if (control.hasError('required')) {
-      return 'This field is required.';
-    }
+    if (control.hasError('required')) return 'This field is required.';
 
-    if (control.hasError('passwordConfirmMatch')) {
-      return "Password and confirmation doesn't match.";
-    }
+    if (control.hasError('passwordConfirmMatch')) return "Password and confirmation doesn't match.";
 
     /**
      * This happens when the group is valid, but the fields aren't.
      * In this case we don't want to display any error on the form level.
      */
-    if (control.errors === null) {
-      return '';
-    }
+    if (control.errors === null) return '';
 
     return 'Unknown error.';
   }

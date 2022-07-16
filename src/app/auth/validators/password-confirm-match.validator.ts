@@ -1,10 +1,9 @@
 import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
-import { PasswordChangeFormValues } from '../types';
 
 export function passwordConfirmMatch(): ValidatorFn {
   return (control: AbstractControl): ValidationErrors | null => {
-    const { password, passwordConfirmation } =
-      control.value as PasswordChangeFormValues;
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    const { password, passwordConfirmation } = control.value;
 
     return password === passwordConfirmation
       ? null

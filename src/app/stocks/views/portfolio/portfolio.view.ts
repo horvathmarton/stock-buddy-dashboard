@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { format } from 'date-fns';
@@ -37,8 +37,7 @@ type PageControlValues = { portfolio: StockPortfolio; as_of: Date };
 })
 export class PortfolioSummaryViewComponent
   extends DisposableComponent
-  implements OnInit
-{
+  implements OnInit {
   private readonly DIALOG_BASE_CONFIG = {
     minHeight: '300px',
     minWidth: '400px',
@@ -54,10 +53,8 @@ export class PortfolioSummaryViewComponent
   public readonly isLoading = this.query.selectLoading();
   public readonly createTransaction = new Subject<string | null>();
   public readonly controls = this.builder.group({
-    /* eslint-disable @typescript-eslint/unbound-method */
-    portfolio: [this.SUMMARY_VALUE, Validators.required],
-    asOf: [new Date(), Validators.required],
-    /* eslint-enable */
+    portfolio: new FormControl<StockPortfolio>(this.SUMMARY_VALUE, Validators.required),
+    asOf: new Date(),
   });
 
   public basicData!: StockPosition[];
@@ -180,6 +177,7 @@ export class PortfolioSummaryViewComponent
   private handleControlChanges(): void {
     this.controls.controls.portfolio.valueChanges
       .pipe(
+        filter(isDefined),
         tap((portfolio: StockPortfolio) =>
           this.stockPortfolioService.select(
             portfolio.id !== this.SUMMARY_VALUE.id ? portfolio : undefined
@@ -193,8 +191,8 @@ export class PortfolioSummaryViewComponent
       .pipe(
         /* eslint-disable @typescript-eslint/no-unsafe-assignment */
         map(({ portfolio, asOf }) => ({
-          portfolio,
-          as_of: asOf,
+          portfolio: portfolio as StockPortfolio,
+          as_of: asOf as Date,
         })),
         /* eslint-enable */
         tap(({ portfolio, as_of }: PageControlValues) =>

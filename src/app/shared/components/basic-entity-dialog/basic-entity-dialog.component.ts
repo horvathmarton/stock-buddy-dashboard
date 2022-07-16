@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { AbstractControl, FormBuilder, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormControl, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { BasicEntity } from '../../interfaces';
 
@@ -14,11 +14,9 @@ interface DialogData {
 })
 export class BasicEntityDialogComponent implements OnInit {
   public form = this.builder.group({
-    /* eslint-disable @typescript-eslint/unbound-method */
-    id: null,
-    name: [null, Validators.required],
-    description: null,
-    /* eslint-enable */
+    id: new FormControl<number | null>(null),
+    name: new FormControl<string | null>(null, Validators.required),
+    description: new FormControl<string | null>(null),
   });
 
   constructor(
@@ -26,7 +24,7 @@ export class BasicEntityDialogComponent implements OnInit {
     private dialogRef: MatDialogRef<BasicEntityDialogComponent>,
     @Inject(MAT_DIALOG_DATA)
     public data: DialogData
-  ) {}
+  ) { }
 
   public ngOnInit(): void {
     this.form.patchValue(this.data.entity);
@@ -35,9 +33,7 @@ export class BasicEntityDialogComponent implements OnInit {
   public save(): void {
     this.form.markAllAsTouched();
 
-    if (this.form.invalid) {
-      return;
-    }
+    if (this.form.invalid) return;
 
     this.dialogRef.close(this.form.value);
   }
@@ -45,9 +41,7 @@ export class BasicEntityDialogComponent implements OnInit {
   public getErrorMessage(control: AbstractControl | null): string {
     if (control === null) return 'Unknown error.';
 
-    if (control.hasError('required')) {
-      return 'This field is required.';
-    }
+    if (control.hasError('required')) return 'This field is required.';
 
     return 'Unknown error.';
   }

@@ -1,13 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { AbstractControl, FormBuilder, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { EMPTY } from 'rxjs';
 import { catchError, filter, finalize, take, tap } from 'rxjs/operators';
 import { ErrorResponse } from '../../../shared/types';
 import { AuthService } from '../../services';
 import { AuthQuery } from '../../state';
-
-type LoginFormValues = { username: string; password: string };
 
 @Component({
   templateUrl: './login.view.html',
@@ -17,11 +15,9 @@ export class LoginViewComponent implements OnInit {
   public isLoading = false;
   public formError: string | null = null;
 
-  public readonly form = this.fb.group({
-    /* eslint-disable @typescript-eslint/unbound-method */
-    username: [null, [Validators.required]],
-    password: [null, [Validators.required]],
-    /* eslint-enable */
+  public readonly form = this.fb.nonNullable.group({
+    username: new FormControl<string | null>(null, Validators.required),
+    password: new FormControl<string | null>(null, Validators.required),
   });
 
   constructor(
@@ -29,7 +25,7 @@ export class LoginViewComponent implements OnInit {
     private readonly auth: AuthService,
     private readonly router: Router,
     private readonly query: AuthQuery
-  ) {}
+  ) { }
 
   public ngOnInit(): void {
     this.query.isAuthenticated
@@ -42,9 +38,9 @@ export class LoginViewComponent implements OnInit {
   }
 
   public login(): void {
-    if (!this.form.valid) return;
+    const { username, password } = this.form.value;
 
-    const { username, password } = this.form.value as LoginFormValues;
+    if (!this.form.valid || !username || !password) return;
 
     this.isLoading = true;
     this.formError = null;
@@ -70,9 +66,7 @@ export class LoginViewComponent implements OnInit {
   public getErrorMessage(control: AbstractControl | null): string {
     if (control === null) return 'Unknown error.';
 
-    if (control.hasError('required')) {
-      return 'This field is required.';
-    }
+    if (control.hasError('required')) return 'This field is required.';
 
     return 'Unknown error.';
   }

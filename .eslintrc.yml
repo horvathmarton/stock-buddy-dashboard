@@ -11,3 +11,7 @@ extends:
   - "plugin:@typescript-eslint/recommended"
   - "plugin:@typescript-eslint/recommended-requiring-type-checking"
   - "prettier"
+rules:
+  "@typescript-eslint/unbound-method":
+    - "error"
+    - "ignoreStatic": true
