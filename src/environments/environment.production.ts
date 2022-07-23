@@ -1,4 +1,4 @@
 export const environment = {
-  production: true,
+  env: 'production',
   baseUrl: 'https://stock-buddy.com/api',
 };
