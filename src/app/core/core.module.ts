@@ -42,7 +42,7 @@ const GUARDS = [AuthGuard];
     BrowserAnimationsModule,
     MaterialModule,
     HttpClientModule,
-    environment.production ? [] : AkitaNgDevtools.forRoot(),
+    environment.env === 'production' ? [] : AkitaNgDevtools.forRoot(),
   ],
   providers: [
     ...GUARDS,
