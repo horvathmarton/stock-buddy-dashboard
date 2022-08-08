@@ -9,7 +9,7 @@ interface TargetInfo {
   change: number;
 }
 
-type TargetInfoMap = Record<
+export type TargetInfoMap = Record<
   'targetPrice' | 'positionSize' | 'positionSizeAtCost',
   TargetInfo | null
 >;

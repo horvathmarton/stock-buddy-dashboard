@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { FormBuilder, FormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { filter, map, Subject, switchMap, take, takeUntil, tap } from 'rxjs';
 import {
@@ -15,8 +15,15 @@ import {
   WatchlistItemEditorDialogResult,
 } from '../../components';
 import { Watchlist, WatchlistItem, WatchlistListItem } from '../../interfaces';
-import { TargetsService, WatchlistService } from '../../services';
+import {
+  TargetInfoMap,
+  TargetsMap,
+  TargetsService,
+  WatchlistService,
+} from '../../services';
 import { WatchlistQuery } from '../../state';
+
+export type ExtendedWatchlistItem = WatchlistItem & TargetInfoMap;
 
 @Component({
   templateUrl: './watchlist.view.html',
@@ -28,11 +35,28 @@ export class WatchlistViewComponent
 {
   public readonly isLoading = this.query.selectLoading();
 
-  public readonly selectedWatchlist = new FormControl();
+  public readonly form = this.builder.group({
+    ownedOnly: false,
+    selectedWatchlist: new FormControl<Watchlist | null>(null),
+  });
 
   public readonly watchlistTargets = this.query.details.pipe(
     filter(isDefined),
     switchMap((watchlist) => this.targetsService.nextTargets(watchlist))
+  );
+  public readonly watchlistItems = this.query.watchlistItems.pipe(
+    switchMap((items) =>
+      this.watchlistTargets.pipe(
+        map((targets) => this.mergeItemData(items, targets)),
+        map((items) =>
+          items.filter(
+            (item) =>
+              !this.form.controls.ownedOnly.getRawValue() ||
+              item.positionSizeAtCost
+          )
+        )
+      )
+    )
   );
 
   public readonly createItem = new Subject<null>();
@@ -49,6 +73,7 @@ export class WatchlistViewComponent
   constructor(
     public readonly query: WatchlistQuery,
     private readonly dialog: MatDialog,
+    private readonly builder: FormBuilder,
     private readonly stockService: StockService,
     private readonly errorService: ErrorService,
     private readonly targetsService: TargetsService,
@@ -116,11 +141,22 @@ export class WatchlistViewComponent
   }
 
   private handleControlChanges(): void {
-    this.selectedWatchlist.valueChanges
+    this.form.controls.selectedWatchlist.valueChanges
       .pipe(
-        filter((result) => isDefined(result)),
+        filter(isDefined),
         map((watchlist: Watchlist) => watchlist.id),
         tap((watchlistId: number) => this.watchlistService.fetch(watchlistId)),
+        takeUntil(this.onDestroy)
+      )
+      .subscribe();
+
+    this.form.controls.ownedOnly.valueChanges
+      .pipe(
+        map(() => this.form.controls.selectedWatchlist.getRawValue()),
+        filter(isDefined),
+        tap((watchlist: Watchlist) =>
+          this.watchlistService.fetch(watchlist.id)
+        ),
         takeUntil(this.onDestroy)
       )
       .subscribe();
@@ -131,7 +167,11 @@ export class WatchlistViewComponent
       .pipe(
         filter(isDefined),
         filter((watchlists: WatchlistListItem[]) => watchlists.length > 0),
-        tap((watchlists) => this.selectedWatchlist.patchValue(watchlists[0])),
+        tap((watchlists) =>
+          this.form.patchValue({
+            selectedWatchlist: watchlists[0] as Watchlist,
+          })
+        ),
         take(1)
       )
       .subscribe();
@@ -246,5 +286,21 @@ export class WatchlistViewComponent
         takeUntil(this.onDestroy)
       )
       .subscribe();
+  }
+
+  private mergeItemData(
+    items: WatchlistItem[],
+    targets: TargetsMap
+  ): ExtendedWatchlistItem[] {
+    return items.map((item) => {
+      const target = targets[item.ticker] ?? {};
+
+      return {
+        ...item,
+        targetPrice: target.targetPrice,
+        positionSize: target.positionSize,
+        positionSizeAtCost: target.positionSizeAtCost,
+      };
+    });
   }
 }

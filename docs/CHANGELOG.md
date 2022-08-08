@@ -7,6 +7,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Filter watchlist table to only contain items that are already in the portfolio.
+
+### Fixed
+
+- Correct watchlist table sorting for every column.
+
+## [1.2.1] - 2022-07-23
+
+### Fixed
+
+- Ignore login errors when reporting to Sentry.
+
 ## [1.2.0] - 2022-06-11
 
 ### Added

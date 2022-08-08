@@ -46,7 +46,7 @@ export class CashViewComponent extends DisposableComponent implements OnInit {
   public readonly isLoading = combineLatest([
     this.cashQuery.selectLoading(),
     this.transactionsQuery.selectLoading(),
-  ]).pipe(tap(console.log), some());
+  ]).pipe(some());
 
   private readonly DIALOG_BASE_CONFIG = {
     minHeight: '300px',
