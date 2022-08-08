@@ -9,8 +9,12 @@
     display: flex;
     align-items: center;
 
+    .owned-filter {
+      margin-bottom: 16px;
+    }
+
     .control-field {
-      margin-left: calc($margin-size / 2);
+      margin-left: $margin-size;
     }
 
     .add-button {

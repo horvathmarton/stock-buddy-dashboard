@@ -1,4 +1,4 @@
-<mat-table [dataSource]="(dataSource | async)!" matSort class="table">
+<mat-table [dataSource]="dataSource" matSort class="table">
   <ng-container matColumnDef="ticker">
     <mat-header-cell *matHeaderCellDef mat-sort-header>Ticker</mat-header-cell>
     <mat-cell *matCellDef="let row">{{ row.ticker }}</mat-cell>
@@ -10,7 +10,7 @@
       >Closest target price</mat-header-cell
     >
     <mat-cell *matCellDef="let row">
-      {{ ((targets | async)?.[row.ticker]?.targetPrice?.change | percent) ?? 'N/A' }}
+      {{ (row?.targetPrice?.change | percent) ?? fallbackValue }}
     </mat-cell>
   </ng-container>
 
@@ -19,7 +19,7 @@
       >Next position size</mat-header-cell
     >
     <mat-cell *matCellDef="let row">
-      {{ ((targets | async)?.[row.ticker]?.positionSize?.change | percent) ?? 'N/A' }}
+      {{ (row?.positionSize?.change | percent) ?? fallbackValue }}
     </mat-cell>
   </ng-container>
 
@@ -28,7 +28,7 @@
       >Next position size (@ cost)</mat-header-cell
     >
     <mat-cell *matCellDef="let row">
-      {{ ((targets | async)?.[row.ticker]?.positionSizeAtCost?.change | percent) ?? 'N/A' }}
+      {{ (row?.positionSizeAtCost?.change | percent) ?? fallbackValue }}
     </mat-cell>
   </ng-container>
 
@@ -51,7 +51,7 @@
   </ng-container>
 
   <ng-container matColumnDef="controls">
-    <mat-header-cell *matHeaderCellDef mat-sort-header></mat-header-cell>
+    <mat-header-cell *matHeaderCellDef></mat-header-cell>
     <mat-cell *matCellDef="let row" class="controls-cell">
       <button (click)="editOnWatchlist($event, row.ticker)" mat-icon-button>
         <mat-icon>edit</mat-icon>
